@@ -1,0 +1,144 @@
+/* Body é a estilização do corpo da página, incluindo fundo, fonte e centralização */
+body {
+  margin: 0; /* Remove a margem padrão da página */
+  font-family: 'Baloo 2', extrabold; /* Define a fonte para o texto */
+  background: linear-gradient(to bottom, #251204, #5C2C0B); /* Define um gradiente como fundo */
+  display: flex; /* Ativa o Flexbox para organizar o layout */
+  justify-content: center; /* Centraliza os itens horizontalmente */
+  align-items: center; /* Centraliza os itens verticalmente */
+  height: 100vh; /* Preenche toda a altura da tela visível */
+}
+
+/* Estiliza a div com a classe "container" (a caixa principal onde os botões e o timer estão) */
+.container {
+  text-align: center; /* Alinha o texto ao centro */
+  max-width: 1440px; /* Define a largura da caixa */
+  width: 90%;
+  color: #f4c26b; /* Define a cor do texto */
+  display: flex;
+  flex-direction: column; /* Organiza os itens da container em coluna */
+  align-items: center; /* Centraliza os itens horizontalmente */
+}
+
+/* Estiliza os botões de modo (Pomodoro, Pausa Curta, Pausa Longa) */
+.modo-botoes {
+  display: flex; /* Exibe os botões em linha */
+  justify-content: center; /* Centraliza os botões horizontalmente */
+  width: 100%; max-width: 534px; /* Limita a largura máxima da div */
+  height: 55px; /* Define a altura dos botões */
+  gap: 28px; /* Espaçamento entre os botões */
+  margin-bottom: 40px; /* Espaço abaixo dos botões */
+}
+
+/* Estiliza cada botão de modo (Pomodoro, Pausa Curta, Pausa Longa) */
+.modo-botao {
+  background-color: transparent; /* Fundo transparente */
+  border: 1px solid #f4c26c; /* Borda de cor dourada */
+  color: #f4c26c; /* Cor do texto */
+  display: flex;
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  width: auto; /* Permite que o tamanho se ajuste ao conteúdo */
+  padding: 0 2.0rem; /* Espaçamento extra para aumentar a área de clique */
+  height: 3.5rem;
+  border-radius: 999px; /* Deixa o botão arredondado */
+  font-weight: 700; /* Texto em negrito */
+  font-size: 1.2rem; /* Tamanho da fonte */
+  cursor: pointer; /* Muda o cursor para "mãozinha" ao passar por cima */
+  transition: all 0.3s ease; /* Transição suave para efeitos de hover */
+  white-space: nowrap; /* Impede quebra de linha no texto */
+  letter-spacing: 0.03rem;
+}
+
+/* Estiliza o efeito quando o botão de modo é hover */
+.modo-botao:hover {
+  background-color: rgba(59, 28, 3, 0.384); /* Adiciona uma cor de fundo ao passar o mouse */
+  box-shadow: 0 0 8px rgb(110, 66, 8); /* Adiciona uma sombra ao botão */
+}
+
+/* Estiliza o botão de modo ativo (quando selecionado) */
+.modo-botao.ativo {
+  background-color: #F4B400; /* Fundo dourado */
+  color: #3d1f0f; /* Texto marrom escuro */
+  box-shadow: 0 0 10px #3e1f0d; /* Sombra mais forte ao redor do botão */
+}
+
+/* Estiliza a área do timer (exibição do tempo) */
+#timer-display {
+  font-size: 14rem; /* Tamanho grande da fonte */
+  font-weight: 800; /* Texto em negrito */
+  text-shadow:  10px 10px 0.6px  rgba(0, 0, 0, 0.50); /* Sombra do texto para destacar */
+  width: 200px; /* Largura do timer */
+  height: 200px; /* Altura do timer */
+  margin-bottom: 50px; /* Espaçamento abaixo do timer */
+  display: flex; /* Ativa o Flexbox para centralizar o conteúdo do timer */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 10px;
+  letter-spacing: 1rem;
+}
+
+/* Estiliza os botões de controle (Iniciar, Pausar, Reiniciar) */
+.botoes-controle {
+  display: flex; /* Exibe os botões em linha */
+  justify-content: center; /* Centraliza os botões horizontalmente */
+  align-items: center; /* Centraliza os botões verticalmente */
+  gap: 42px; /* Espaço entre os botões */
+}
+
+/* Estiliza o botão "Iniciar" */
+.botao-iniciar {
+  width: 271px; /* Largura igual à do Figma */
+  height: 74px; /* Altura igual à do Figma */
+  background: linear-gradient(90deg,  #270D02,  #3c1e0b); /* Gradiente horizontal entre duas cores */
+  border: none; /* Remove a borda */
+  border-radius: 37px; /* Borda arredondada */
+  display: flex; /* Exibe o conteúdo do botão em linha */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  font-family: 'Fredoka', sans-serif; /* Fonte arredondada e amigável */
+  font-size: 24px; /* Tamanho da fonte */
+  font-weight: 700; /* Texto em negrito */
+  box-shadow: 6px 7px 0px #220f01; /* Sombra do botão */
+  cursor: pointer; /* Muda o cursor para "mãozinha" ao passar por cima */
+  transition: all 0.2s ease; /* Transição suave para efeitos de hover */
+  color: #F4B400; /* Cor do texto */
+  font-size: xx-large; /* Ajusta o tamanho da fonte */
+  width: 15rem; /* Ajusta a largura do botão */
+  height: 4rem; /* Ajusta a altura do botão */
+}
+
+/* Efeito quando o botão "Iniciar" é hover */
+.botao-iniciar:hover {
+  transform: scale(1.1); /* Efeito de aumentar ao passar o botão */
+  background-color: #2b1507; /* Escurece levemente o botão */
+}
+
+/* Estiliza os botões pequenos (Pausar e Reiniciar) */
+.botao-pequeno {
+  width: 70px; /* Largura do botão */
+  height: 70px; /* Altura do botão */
+  background-color: #3e1f0d; /* Cor de fundo marrom escuro */
+  box-shadow: 7px 4.5px 0px rgba(0, 0, 0, 0.50);
+  border: none; /* Remove a borda */
+  border-radius: 50%; /* Deixa o botão redondo */
+  display: flex; /* Exibe o conteúdo em linha */
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  cursor: pointer; /* Muda o cursor para "mãozinha" ao passar por cima */
+  transition: all 0.3s ease-in;
+}
+
+/* Efeito quando o botão pequeno é hover */
+.botao-pequeno:hover {
+  transform: scale(1.1); /* Aumenta o tamanho do botão */
+  background-color: #2b1507; /* Muda para cor escura */
+}
+
+/* Estiliza os ícones dentro dos botões pequenos */
+button .icon {
+  width: 38px; /* Largura do ícone */
+  height: 38px; /* Altura do ícone */
+  margin-right: 1px; /* Espaço à direita do ícone */
+  vertical-align: middle; /* Alinha o ícone verticalmente */
+}

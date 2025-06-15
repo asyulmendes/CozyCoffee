@@ -1,0 +1,58 @@
+<!DOCTYPE html> <!-- Define o tipo de documento como HTML5 -->
+<html lang="pt-br"> <!-- Define o idioma do conteúdo da página como português do Brasil -->
+<head>
+  <meta charset="UTF-8"> <!-- Define o conjunto de caracteres para UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Faz o site ser responsivo em dispositivos móveis -->
+  <title>CozyCoffee</title> <!-- Título da página que aparece na aba do navegador -->
+  
+  <!-- Link para o CSS externo (style.css) -->
+  <link rel="stylesheet" href="style.css"> 
+
+  <!-- Link para a fonte Baloo 2, usada no site -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Link para fontes adicionais do botão 'Iniciar' -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Container que envolve todo o conteúdo da página -->
+  <div class="container">
+
+    <!-- Seção dos botões para selecionar o modo -->
+    <div class="modo-botoes">
+      <button id="pomodoro" class="modo-botao ativo">Pomodoro</button> <!-- Botão para o modo Pomodoro -->
+      <button id="pausa-curta" class="modo-botao">Pausa Curta</button> <!-- Botão para a pausa curta -->
+      <button id="pausa-longa" class="modo-botao">Pausa Longa</button> <!-- Botão para a pausa longa -->
+    </div>
+    
+    <!-- Área onde o tempo do timer será exibido -->
+    <div id="timer-display">25:00</div>
+
+    <!-- Seção de botões de controle (Iniciar, Pausar, Reiniciar) -->
+    <div class="botoes-controle">
+      <button id="start" class="botao-iniciar">
+        Iniciar
+      </button>
+      
+      <!-- Botão de Pausa com ícone -->
+      <button id="pause" class="botao-pequeno">
+        <img src="assets/icons/icone-pause.svg" alt="Pause" class="icon"> <!-- Ícone de pausa -->
+      </button>
+    
+      <!-- Botão de Reiniciar com ícone -->
+      <button id="reset" class="botao-pequeno">
+        <img src="assets/icons/icone-reiniciar.svg" alt="Reiniciar" class="icon"> <!-- Ícone de reiniciar -->
+      </button>
+    </div>
+  </div>
+ 
+
+  <!-- Link para o arquivo JavaScript (script.js) -->
+  <script src="script.js"></script>
+</body>
+</html>
