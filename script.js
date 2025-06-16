@@ -1,5 +1,6 @@
 let tempo = 25 * 60;  // Tempo inicial
 let intervalo = null;  // Variável para o setInterval
+let modoAtual = "pomodoro";
 
 const timer = document.getElementById("timer-display");
 const startBtn = document.getElementById("start");
@@ -25,7 +26,10 @@ function IniciarTimer() {
             // Quando o tempo chega a 0
             clearInterval(intervalo);
             intervalo = null;
-            alert("Tempo acabou! Faça uma pausa ☕.");
+
+             // Tocar som de finalização
+            playSound ("sound-end-timer");
+           
         }
     }, 1000);
 }
@@ -48,12 +52,15 @@ function trocarModo(botao) {
     botoesModo.forEach(b => b.classList.remove("ativo"));
     botao.classList.add("ativo");
 
+    modoAtual = botao.id;
+
     if (botao.id === "pomodoro") tempo = 25 * 60;  // 25 minutos para Pomodoro
-    if (botao.id === "pausa-curta") tempo = 5 * 60;  // 5 minutos para Pausa Curta
+    if (botao.id === "pausa-curta") tempo = 5 * 60;   // 5 minutos para Pausa Curta
     if (botao.id === "pausa-longa") tempo = 15 * 60;  // 15 minutos para Pausa Longa
 
     atualizarDisplay();
     pausarTimer();  // Pausa o timer ao trocar de modo
+    console.log ("trocarModo: Modo alterado para:", modoAtual, "Tempo definido:", tempo);
 }
 
 // Adiciona eventos para os botões de modo
@@ -70,8 +77,14 @@ resetBtn.addEventListener("click", resetarTimer);
 
 // Função para tocar o som
 function playSound(id) {
-    const sound = document.getElementById(id);
-    if (sound) sound.play();
+     const sound = document.getElementById(id);
+    console.log("playSound: Tentando tocar som com ID:", id, "Elemento encontrado:", sound); // LINHA PARA DEPURAR
+    if (sound) {
+        sound.play();
+        console.log("playSound: Comando play() disparado."); // LINHA PARA DEPURAR
+    } else {
+        console.log("playSound: ERRO! Elemento de áudio não encontrado com ID:", id); // LINHA PARA DEPURAR
+    }
 }
 
 // Função para atualizar o display do tempo quando a página carrega
