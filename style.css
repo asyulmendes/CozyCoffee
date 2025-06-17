@@ -2,7 +2,11 @@
 body {
   margin: 0; /* Remove a margem padrão da página */
   font-family: 'Baloo 2', extrabold; /* Define a fonte para o texto */
-  background: linear-gradient(to bottom, #251204, #5C2C0B); /* Define um gradiente como fundo */
+  background-image: url(assets/backgrounds/zayne-lendo.png);
+  background-size: cover;
+  background-position:center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   display: flex; /* Ativa o Flexbox para organizar o layout */
   justify-content: center; /* Centraliza os itens horizontalmente */
   align-items: center; /* Centraliza os itens verticalmente */
@@ -141,4 +145,33 @@ button .icon {
   height: 38px; /* Altura do ícone */
   margin-right: 1px; /* Espaço à direita do ícone */
   vertical-align: middle; /* Alinha o ícone verticalmente */
+}
+
+
+.icon-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1px;
+  position: absolute;
+  top: 30px;
+  left: 40px;
+
+  z-index: 1000;
+}
+
+.icon-menu button{
+  background-color: transparent;
+  border: none;
+  padding: 15px;
+  cursor: pointer;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-menu img {
+  width: 30px;
+  height: 30px;
 }
