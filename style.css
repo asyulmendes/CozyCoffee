@@ -168,10 +168,77 @@ button .icon {
   cursor: pointer;
   display:flex;
   justify-content: center;
-  align-items: center;
+  align-items: center
 }
 
 .icon-menu img {
   width: 30px;
   height: 30px;
+}
+
+.botao-musica {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1px;
+  position: absolute;
+  bottom: 30px;
+  right: 40px;
+  z-index: 1000;
+}
+
+.botao-musica button {
+  background-color: transparent;
+  border: none;
+  padding: 15px;
+  cursor: pointer;
+  display:flex ;
+  justify-content: center;
+  align-items: center;
+}
+
+.botao-musica img {
+  width: 67x;
+  height: 58px;
+}
+
+#icon-musica:hover {
+  transform: scale(1.1);
+}
+
+.tooltipstext {
+  visibility: hidden;
+  opacity: 0;
+  width: auto;
+  white-space: nowrap;
+  background-color: #3d1f0f73;
+  color:#F4B400;
+  text-align: center;
+   border-radius: 20px;
+   padding: 5px 10px;
+   font-size: 1rem;
+   font: 'Baloo 2', extrabold;
+  
+   position: absolute;
+   z-index: 1;
+   top: 100%;
+   left: 50%;
+   transform: translateX(-50%);
+
+   transition: opacity 0.3s ease-in-out,  visibility 0.3s ease-in-out;
+}
+
+.icon-menu button:hover .tooltipstext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltipstext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+
+
 }
