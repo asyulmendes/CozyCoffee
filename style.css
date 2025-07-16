@@ -8,9 +8,9 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   display: flex; /* Ativa o Flexbox para organizar o layout */
-  justify-content: center; /* Centraliza os itens horizontalmente */
-  align-items: center; /* Centraliza os itens verticalmente */
-  height: 100vh; /* Preenche toda a altura da tela visível */
+  flex-direction: column; 
+  /* Centraliza os itens verticalmente */
+  min-height: 100vh; /* Preenche toda a altura da tela visível */
 }
 
 /* Estiliza a div com a classe "container" (a caixa principal onde os botões e o timer estão) */
@@ -20,10 +20,17 @@ body {
   width: 90%;
   color: #f4c26b; /* Define a cor do texto */
   display: flex;
+  flex: 1;
   flex-direction: column; /* Organiza os itens da container em coluna */
   align-items: center; /* Centraliza os itens horizontalmente */
 }
 
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* Estiliza os botões de modo (Pomodoro, Pausa Curta, Pausa Longa) */
 .modo-botoes {
   display: flex; /* Exibe os botões em linha */
@@ -241,4 +248,93 @@ button .icon {
   left: 50%;
 
 
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  color:#220f01;
+  background-color: rgba (37, 21, 6, 0.7);
+
+}
+
+footer a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba (47, 21, 6, 0.5);
+  z-index: -1;
+}
+
+/* ======================================================= */
+/* === ALTERNATIVA: Layout Mais Fiel ao Original === */
+/* ======================================================= */
+
+@media (max-width: 768px) {
+
+  /* 1. AJUSTANDO A FONTE GIGANTE DO TIMER */
+  #timer-display {
+    font-size: 22vw; /* Um pouco menor que antes pra dar mais espaço */
+    letter-spacing: 0.2rem;
+    height: auto;
+  }
+
+  /* 2. AJUSTANDO OS BOTÕES DE MODO */
+  .modo-botoes {
+    gap: 10px;
+    flex-wrap: wrap; 
+    justify-content: center;
+    margin-bottom: 30px; 
+  }
+
+  .modo-botao {
+    font-size: 0.9rem; /* Fonte um pouco menor */
+    padding: 0.6rem 0.9rem;
+    height: auto;
+  }
+
+  /* 3. MANTENDO BOTÕES DE CONTROLE NA HORIZONTAL (A GRANDE MUDANÇA!) */
+  .botoes-controle {
+    flex-direction: row; /* Mantém a direção em linha */
+    align-items: center;  /* Alinha verticalmente */
+    gap: 15px; /* Diminui o espaço entre eles */
+  }
+  
+  .botao-iniciar {
+    width: 150px; /* Largura bem menor */
+    height: 60px; /* Altura menor */
+    font-size: 1.2rem; /* Fonte menor */
+  }
+
+  .botao-pequeno {
+    width: 60px; /* Diminui os botões de ícone */
+    height: 60px;
+  }
+
+  button .icon {
+    width: 30px; /* Diminui o ícone dentro do botão */
+    height: 30px;
+  }
+
+  .botao-musica {
+    display: none;
+  }
+
+  
+  /* (O restante dos ajustes para os menus dos cantos e container podem continuar os mesmos) */
+  .icon-menu { top: 15px; left: 15px; }
+  .container { width: 95%; justify-content: center; }
 }

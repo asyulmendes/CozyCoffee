@@ -19,6 +19,10 @@
 </head>
 
 <body>
+
+<div class="overlay"></div>
+
+   <main>
   <!-- Container que envolve todo o conteúdo da página -->
   <div class="container">
 
@@ -31,7 +35,7 @@
   
   <button id="configuracao">
     <img src="assets/icons/icon-configuracao.svg" alt="configuracao" >
-    <span class="tooltipstext"> Configuração</span>
+    <span class="tooltipstext"> Configurações</span>
   </button>
   <button id="compartilhar">
     <img src="assets/icons/icon-compartilhar.svg" alt="compartilhar" >
@@ -43,6 +47,8 @@
   </button>
 
 </nav>
+
+ 
     <!-- Seção dos botões para selecionar o modo -->
     <div class="modo-botoes">
       <button id="pomodoro" class="modo-botao ativo">Pomodoro</button> <!-- Botão para o modo Pomodoro -->
@@ -70,18 +76,24 @@
       </button>
     </div>
   </div>
+</main>
 
+<aside>
     <div class="botao-musica">
       <button id="icon-musica">
       <img src="assets/icons/icon-musica.svg" alt="musica">
       </button>
 </div>
+</aside>
+<audio id= "sound-end-timer" src="assets/sons/finalizacao-som.mp3" preload="auto"></audio>
+ 
 
- <audio id= "sound-end-timer" src="assets/sons/finalizacao-som.mp3" preload="auto"></audio>
-
- <!--<footer>
-  <p> Desenvolvido por Ana Mendes </p>
- </footer> --> 
+ <footer>
+  <a href="https://www.linkedin.com/in/analuysamendes/">
+    <p> Desenvolvido por Ana Mendes </p>
+  </a>
+ </footer>
+ 
   <!-- Link para o arquivo JavaScript (script.js) -->
   <script src="script.js"></script>
 </body>
