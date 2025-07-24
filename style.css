@@ -2,15 +2,13 @@
 body {
   margin: 0; /* Remove a margem padrão da página */
   font-family: 'Baloo 2', extrabold; /* Define a fonte para o texto */
-  background-image: url(assets/backgrounds/zayne-lendo.png);
   background-size: cover;
-  background-position:center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background: #220f01 url(assets/backgrounds/zayne-lendo.png) center center no-repeat fixed ;
   display: flex; /* Ativa o Flexbox para organizar o layout */
   flex-direction: column; 
   /* Centraliza os itens verticalmente */
   min-height: 100vh; /* Preenche toda a altura da tela visível */
+  
 }
 
 /* Estiliza a div com a classe "container" (a caixa principal onde os botões e o timer estão) */
@@ -30,6 +28,7 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: auto;
 }
 /* Estiliza os botões de modo (Pomodoro, Pausa Curta, Pausa Longa) */
 .modo-botoes {
@@ -253,7 +252,7 @@ button .icon {
 footer {
   text-align: center;
   padding: 1rem 0;
-  color:#220f01;
+  color:#f4c26b;
   background-color: rgba (37, 21, 6, 0.7);
 
 }
