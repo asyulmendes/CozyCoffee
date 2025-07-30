@@ -3,7 +3,7 @@ body {
   margin: 0; /* Remove a margem padrão da página */
   font-family: 'Baloo 2', extrabold; /* Define a fonte para o texto */
   background-size: cover;
-  background: #220f01 url(assets/backgrounds/zayne-lendo.png) center center no-repeat fixed ;
+  background: #220f01 url(assets/backgrounds/zayne-lendo.png) center center no-repeat fixed;
   display: flex; /* Ativa o Flexbox para organizar o layout */
   flex-direction: column; 
   /* Centraliza os itens verticalmente */
@@ -16,7 +16,7 @@ body {
   text-align: center; /* Alinha o texto ao centro */
   max-width: 1440px; /* Define a largura da caixa */
   width: 90%;
-  color: #f4c26b; /* Define a cor do texto */
+  color:#F4B400; /* Define a cor do texto */
   display: flex;
   flex: 1;
   flex-direction: column; /* Organiza os itens da container em coluna */
