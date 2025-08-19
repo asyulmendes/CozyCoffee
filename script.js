@@ -16,7 +16,7 @@ function atualizarDisplay() {
 
     timer.textContent = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
 
-    document.title = `${tempoFormatado} - CozyCoffee`;
+    document.title = `${tempoFormatado} - ☕CozyCoffee`;
 }
 
 
