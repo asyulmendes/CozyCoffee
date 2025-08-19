@@ -11,8 +11,15 @@ const botoesModo = document.querySelectorAll(".modo-botao");
 function atualizarDisplay() {
     const minutos = Math.floor(tempo / 60);  // Converte segundos para minutos
     const segundos = tempo % 60;  // Obtém os segundos restantes
+    const  tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+
+
     timer.textContent = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+
+    document.title = `${tempoFormatado} - CozyCoffee`;
 }
+
+
 
 // Função para iniciar o timer
 function IniciarTimer() {
