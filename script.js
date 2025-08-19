@@ -8,17 +8,19 @@ const pauseBtn = document.getElementById("pause");
 const resetBtn = document.getElementById("reset");
 const botoesModo = document.querySelectorAll(".modo-botao");
 
+// VERSÃO FINAL E PERFEITA
+
 function atualizarDisplay() {
-    const minutos = Math.floor(tempo / 60);  // Converte segundos para minutos
-    const segundos = tempo % 60;  // Obtém os segundos restantes
-    const  tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+    const minutos = Math.floor(tempo / 60);
+    const segundos = tempo % 60;
+    const tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
 
+    // 1. Atualiza o tempo na PÁGINA
+    timer.textContent = tempoFormatado;
 
-    timer.textContent = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
-
-    document.title = `${tempoFormatado} - ☕CozyCoffee`;
+    // 2. Atualiza o tempo na ABA DO NAVEGADOR com o novo estilo
+    document.title = `☕ ${tempoFormatado} | CozyCoffee`;
 }
-
 
 
 // Função para iniciar o timer
