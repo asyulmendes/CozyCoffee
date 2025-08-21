@@ -155,7 +155,7 @@ button .icon {
 
 
 .icon-menu {
-  display: flex;
+  display: none;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -183,7 +183,7 @@ button .icon {
 }
 
 .botao-musica {
-  display: flex;
+  display: none;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
