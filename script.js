@@ -1,6 +1,7 @@
 let tempo = 25 * 60;  // Tempo inicial
 let intervalo = null;  // Variável para o setInterval
 let modoAtual = "pomodoro";
+let ciclosPomodoro = 0; 
 
 const timer = document.getElementById("timer-display");
 const startBtn = document.getElementById("start");
@@ -72,6 +73,33 @@ function trocarModo(botao) {
     console.log ("trocarModo: Modo alterado para:", modoAtual, "Tempo definido:", tempo);
 }
 
+function  iniciarProximoModo() {
+    if (modoAtual === 'pomodoro') {
+        console.log ('Ciclos de Pomodoro completos: ${ciclosPomodoro}');
+
+        if (ciclosPomodoro % 4 === 0) {
+            trocarModo ('pausa-longa');
+        } else {
+            trocarModo('pausa-curta');
+
+        } 
+        }
+
+    else {
+        trocarModo('pomodoro');
+    }
+
+    setTimeout (IniciarTimer, 1000);
+    }
+
+
+    function trocarModo (idModo) {
+        const botaoAlvo = document.getElementById(idModo);
+
+        if (botaoAlvo) {
+            trocarModo(botaoAlvo);
+        }
+    }
 // Adiciona eventos para os botões de modo
 botoesModo.forEach(botao => {
     botao.addEventListener("click", () => {
