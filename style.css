@@ -3,7 +3,12 @@ body {
   margin: 0; /* Remove a margem padrão da página */
   font-family: 'Baloo 2', extrabold; /* Define a fonte para o texto */
   background-size: cover;
-  background: #220f01 url(assets/backgrounds/zayne-lendo.png) center center no-repeat fixed;
+background-color: #220f01; /* Cor de fundo caso a imagem não carregue */
+  background-image: url('assets/backgrounds/zayne-lendo.jpg'); /* Imagem de fundo padrão */
+  background-size: cover; /* Para cobrir toda a tela */
+  background-position: center center; /* Para centralizar a imagem */
+  background-repeat: no-repeat; /* Para não repetir a imagem */
+  background-attachment: fixed; /* Para a imagem ficar fixa ao rolar */
   display: flex; /* Ativa o Flexbox para organizar o layout */
   flex-direction: column; 
   /* Centraliza os itens verticalmente */
@@ -155,7 +160,7 @@ button .icon {
 
 
 .icon-menu {
-  display: none;
+  display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
@@ -253,7 +258,7 @@ footer {
   text-align: center;
   padding: 1rem 0;
   color:#f4c26b;
-  background-color: rgba (37, 21, 6, 0.7);
+  background-color: rgba(37, 21, 6, 0.082);
 
 }
 
@@ -336,4 +341,10 @@ footer a:hover {
   /* (O restante dos ajustes para os menus dos cantos e container podem continuar os mesmos) */
   .icon-menu { top: 15px; left: 15px; }
   .container { width: 95%; justify-content: center; }
+}
+
+#perfil,
+#configuracao,
+#compartilhar {
+  display: none;
 }
