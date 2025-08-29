@@ -45,7 +45,30 @@ const fundosDeTela = [
     'assets/backgrounds/sofa-casa.jpg',
     'assets/backgrounds/textura-abstrata.jpg',
     'assets/backgrounds/versiculo.jpg',
-    'assets/backgrounds/zayne-lendo.jpg'
+    'assets/backgrounds/zayne-lendo.jpg',
+    'assets/backgrounds/army.jpg',
+    'assets/backgrounds/barista-entrega.jpg',
+    'assets/backgrounds/barista-janela.jpg',
+    'assets/backgrounds/cafes-gatos.jpg',
+    'assets/backgrounds/cha-velaris.jpg',
+    'assets/backgrounds/garoto-sentado.jpg',
+    'assets/backgrounds/gatinho-janela.jpg',
+    'assets/backgrounds/homem-sentado.jpg',
+    'assets/backgrounds/hp-grin.jpg',
+    'assets/backgrounds/janela-anime.jpg',
+    'assets/backgrounds/landscape-arte.jpg',
+    'assets/backgrounds/landscape-chuvososofa.jpg',
+    'assets/backgrounds/landscape-janelamono.jpg',
+    'assets/backgrounds/menino-violao.jpg',      
+    'assets/backgrounds/meninos-reunidos.jpg',   
+    'assets/backgrounds/moca-lendo.jpg',
+    'assets/backgrounds/namjoon.jpg',
+    'assets/backgrounds/padrao-gatoscafe.jpg',   
+    'assets/backgrounds/rhys-feyre.jpg',         
+    'assets/backgrounds/sofa-magico.jpg',       
+    'assets/backgrounds/xavier-astral.jpg',     
+    'assets/backgrounds/zayne-landscape.jpg'
+
 ];
 
 // ===================================================================
