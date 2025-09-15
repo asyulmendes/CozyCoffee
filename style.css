@@ -153,19 +153,14 @@ main {
   transition: all 0.2s ease;
   width: 12rem; /* Tamanho refinado */
   height: 60px; /* Tamanho refinado */
+  font-family: var(--fonte-padrao);
+  color: var(--cor-destaque-amarelo);
+  font-weight: bolder;
+  letter-spacing: 3px;
+  font-size: 1.5rem;
   
 }
 
-.botao-iniciar h1 {
-  font-family: var(--fonte-padrao);
-  font-weight: bolder;
-  letter-spacing: 3px;
-  font-size: 1.5rem; /* Tamanho refinado */
-   color: var(--cor-destaque-amarelo);
-   padding: 20px;
-   margin-top: 10px;
-   margin-bottom: 10px;
-}
 /* Efeito de escala ao passar o mouse sobre o botão "Iniciar". */
 .botao-iniciar:hover {
   transform: scale(1.1);
@@ -271,6 +266,87 @@ button .icon {
   opacity: 1;
 }
 
+.escondido {
+  display: none;
+}
+
+#menu-fundos {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.menu-conteudo {
+  background-color: var(--cor-fundo-botao);
+  padding: 2rem;
+  border-radius: 15px;
+  text-align: center;
+  color: var(--cor-borda-dourada);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  max-width: 80vh;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.menu-conteudo h3 {
+  margin-top: 0;
+  font-family: var(--fonte-destaque);
+  font-size: 1.5rem;
+  }
+
+#galeria-fundos {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 10px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.miniatura-fundo {
+  width: 280px;
+  height: 200px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.miniatura-fundo:hover {
+  transform: scale(1.05);
+  border-color: var(--cor-borda-dourada);
+}
+
+.botao-fechar {
+  background-color: var(--cor-destaque-amarelo);
+  color: var(--cor-fundo-botao);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--fonte-padrao);
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+  align-self: center;
+}
+
+.botao-fechar:hover {
+  transform: scale(1.05s);
+}
+
 /* =================================================================== */
 /* RODAPÉ E RESPONSIVIDADE
 /* =================================================================== */
@@ -348,3 +424,4 @@ footer a:hover {
     width: 95%;
   }
 }
+
