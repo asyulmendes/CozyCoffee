@@ -267,7 +267,7 @@ button .icon {
 }
 
 .escondido {
-  display: none;
+  display: none !important;
 }
 
 #menu-fundos {
@@ -347,6 +347,25 @@ button .icon {
   transform: scale(1.05s);
 }
 
+#galeria-fundos::-webkit-scrollbar {
+  height: 10px;
+}
+
+#galeria-fundos::-webkit-scrollbar-track {
+  background: var(--cor-texto-claro);
+  border-radius: 10px;
+}
+
+#galeria-fundos::-webkit-scrollbar-thumb {
+  background-color: var(--cor-gradiente-inicio);
+  border-radius: 20px;
+  border: 2px solid var(--cor-texto-claro);
+}
+
+#galeria-fundos::-webkit-scrollbar-thumb:hover {
+  background-color: var(--cor-borda-dourada);
+}
+
 /* =================================================================== */
 /* RODAPÉ E RESPONSIVIDADE
 /* =================================================================== */
@@ -356,7 +375,6 @@ footer {
   text-align: center;
   padding: 1rem 0;
   color: var(--cor-borda-dourada);
-
 }
 
 /* Estilo dos links dentro do rodapé. */

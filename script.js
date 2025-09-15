@@ -137,17 +137,20 @@ window.addEventListener('DOMContentLoaded', () => {
         botao.addEventListener("click", () => trocarModo(botao));
     });
 
-    if (botaoMudarFundo) {
-        botaoMudarFundo.addEventListener('click', () => {
-            menuFundos.classList.remove('escondido');
-        });
-    }
+    
+if (botaoMudarFundo) {
+    botaoMudarFundo.addEventListener('click', () => {
+        menuFundos.classList.remove('escondido');
+        botaoFecharMenu.classList.remove('escondido'); // MOSTRAR o botão de fechar
+    });
+}
 
-    if (botaoFecharMenu) {
-        botaoFecharMenu.addEventListener('click', () => {
-            menuFundos.classList.add('escondido');
-        });
-    }
+if (botaoFecharMenu) {
+    botaoFecharMenu.addEventListener('click', () => {
+        menuFundos.classList.add('escondido');
+        botaoFecharMenu.classList.add('escondido'); // ESCONDER o botão de fechar
+    });
+}
 
     // --- LÓGICA DO MENU DE FUNDOS ---
     if (galeriaFundos) {
