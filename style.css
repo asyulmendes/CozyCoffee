@@ -285,7 +285,7 @@ button .icon {
 }
 
 .menu-conteudo {
-  background-color: var(--cor-fundo-botao);
+  background-color:var(--cor-fundo-botao);
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
@@ -332,6 +332,7 @@ button .icon {
 .botao-fechar {
   background-color: var(--cor-destaque-amarelo);
   color: var(--cor-fundo-botao);
+  box-shadow: 5px 10px 9px var(--cor-gradiente-inicio);
   border: none;
   padding: 10px 25px;
   border-radius: 20px;
@@ -392,10 +393,17 @@ footer a:hover {
 
 /* Regras aplicadas apenas em telas com largura máxima de 768px (celulares/tablets). */
 @media (max-width: 768px) {
+
+
+  body {
+    background-position: center center;
+  }
+
   #timer-display {
-    font-size: 22vw;
+    font-size: 30vw;
     letter-spacing: 0.2rem;
     height: auto;
+    padding: 40px;
   }
 
   .modo-botoes {
@@ -441,5 +449,18 @@ footer a:hover {
   .container {
     width: 95%;
   }
+
+.menu-conteudo {
+    width: 70%;
+    height: 50%;
+    margin: auto;
+  }
+  
+  img {
+    max-width: 50%;
+    height: auto;
+  }
+
+
 }
 

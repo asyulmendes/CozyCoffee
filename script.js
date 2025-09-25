@@ -9,26 +9,34 @@ let indiceFundoAtual = 0;
 
 // Lista de fundos como uma lista SIMPLES de caminhos.
 const fundosDeTela = [
-    'assets/backgrounds/amigas-cafe.jpg',
-    'assets/backgrounds/barista-janela.jpg',
-    'assets/backgrounds/cafes-gatos.jpg',
-    'assets/backgrounds/garoto-sentado.jpg',
-    'assets/backgrounds/gatinho-janela.jpg',
-    'assets/backgrounds/hp-grin.jpg',
-    'assets/backgrounds/janela-anime.jpg',
-    'assets/backgrounds/landscape-arte.jpg',
-    'assets/backgrounds/landscape-janelamono.jpg',
-    'assets/backgrounds/namjoon.jpg',
-    'assets/backgrounds/padrao-gatoscafe.jpg',
-    'assets/backgrounds/rhys-feyre.jpg',
-    'assets/backgrounds/barista-cerejeira.jpg',
-    'assets/backgrounds/biblia.jpg',
-    'assets/backgrounds/cafe-padroes.png',
-    'assets/backgrounds/casal-lendo.jpg',
-    'assets/backgrounds/casal.jpg',
-    'assets/backgrounds/devocional.jpg',
-    'assets/backgrounds/versiculo.jpg',
-    'assets/backgrounds/zayne-lendo.jpg'
+    
+  'assets/backgrounds/amigas-cafe.jpg',
+  'assets/backgrounds/amor-sinais.jpg',
+  'assets/backgrounds/banco.jpg',
+  'assets/backgrounds/barista-homem.jpg',
+  'assets/backgrounds/barista-janela.jpg',
+  'assets/backgrounds/barista-pausa.jpg',
+  'assets/backgrounds/biblia.jpg',
+  'assets/backgrounds/café-aconchegante.jpg',
+  'assets/backgrounds/cafes-gatos.jpg',
+  'assets/backgrounds/casal-lendo.jpg',
+  'assets/backgrounds/flores-landscape.jpg',
+  'assets/backgrounds/garoto-sentado.jpg',
+  'assets/backgrounds/gatinho-janela.jpg',
+  'assets/backgrounds/gato-xicara.jpg',
+  'assets/backgrounds/hp-grin.jpg',
+  'assets/backgrounds/janela-anime.jpg',
+  'assets/backgrounds/landscape-arte.jpg',
+  'assets/backgrounds/landscape-janelamono.jpg',
+  'assets/backgrounds/mesa-estudos.jpg',
+  'assets/backgrounds/liyue-montanhas.jpg',
+  'assets/backgrounds/namjoon.jpg',
+  'assets/backgrounds/notebook-background.jpg',
+  'assets/backgrounds/sofa-casa.jpg',
+  'assets/backgrounds/versiculo.jpg',
+  'assets/backgrounds/zayne-lendo.jpg',
+ 
+    
 ];
 
 // ===================================================================
