@@ -3,16 +3,16 @@
 /* =================================================================== */
 :root {
   /* --- FONTES --- */
-  --fonte-destaque: 'Baloo 2', sans-serif;
-  --fonte-padrao: 'Fredoka', sans-serif;
+  --fonte-destaque: "Baloo 2", sans-serif;
+  --fonte-padrao: "Fredoka", sans-serif;
 
   /* --- PALETA DE CORES --- */
-  --cor-texto-claro: #EED9C4;
-  --cor-destaque-amarelo: #F4B400;
+  --cor-texto-claro: #eed9c4;
+  --cor-destaque-amarelo: #f4b400;
   --cor-borda-dourada: #f4c26c;
   --cor-fundo-botao: #3d1f0f;
   --cor-sombra-escura: #220f01;
-  --cor-gradiente-inicio: #270D02;
+  --cor-gradiente-inicio: #270d02;
   --cor-gradiente-fim: #3c1e0b;
 }
 
@@ -25,7 +25,7 @@ body {
   margin: 0;
   font-family: var(--fonte-destaque);
   background-color: var(--cor-sombra-escura);
-  background-image: url('assets/backgrounds/zayne-lendo.jpg');
+  background-image: url("assets/backgrounds/zayne-lendo.jpg");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -121,7 +121,7 @@ main {
 #timer-display {
   font-size: 13rem;
   font-weight: 800;
-  text-shadow: 10px 10px 0.6px rgba(0, 0, 0, 0.50);
+  text-shadow: 10px 10px 0.6px rgba(0, 0, 0, 0.5);
   margin-bottom: -40px;
   margin-top: -80px;
   display: flex;
@@ -142,13 +142,17 @@ main {
 
 /* Estilo principal do botão "Iniciar". */
 .botao-iniciar {
-  background: linear-gradient(45deg, var(--cor-fundo-botao), var(--cor-gradiente-inicio));
+  background: linear-gradient(
+    45deg,
+    var(--cor-fundo-botao),
+    var(--cor-gradiente-inicio)
+  );
   border: none;
   border-radius: 37px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 6px 7px 0px rgba(0, 0, 0, 0.50);
+  box-shadow: 6px 7px 0px rgba(0, 0, 0, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
   width: 12rem; /* Tamanho refinado */
@@ -158,7 +162,6 @@ main {
   font-weight: bolder;
   letter-spacing: 3px;
   font-size: 1.5rem;
-  
 }
 
 /* Efeito de escala ao passar o mouse sobre o botão "Iniciar". */
@@ -171,7 +174,7 @@ main {
   width: 60px;
   height: 60px;
   background-color: var(--cor-fundo-botao);
-  box-shadow: 7px 4.5px 0px rgba(0, 0, 0, 0.50);
+  box-shadow: 7px 4.5px 0px rgba(0, 0, 0, 0.5);
   border: none;
   border-radius: 50%;
   display: flex;
@@ -202,7 +205,7 @@ button .icon {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 1px;
+  gap:0;
   position: absolute;
   top: 30px;
   left: 40px;
@@ -228,7 +231,6 @@ button .icon {
 
 /* Esconde os botões do menu que ainda não têm função. */
 #perfil,
-#configuracao,
 #compartilhar {
   display: none;
 }
@@ -245,9 +247,9 @@ button .icon {
   width: auto;
   white-space: nowrap;
   background-color: transparent;
-  color: var(--cor-texto-claro);
+  color: var(--cor-sombra-escura);
   text-align: center;
-  border: 1px solid var(--cor-borda-dourada);
+  border: 1px solid var(--cor-destaque-amarelo);
   border-radius: 20px;
   padding: 5px 10px;
   font-size: 1rem;
@@ -285,27 +287,27 @@ button .icon {
 }
 
 .menu-conteudo {
-  background-color:var(--cor-fundo-botao);
+  background-color: var(--cor-texto-claro);
   padding: 2rem;
   border-radius: 15px;
   text-align: center;
-  color: var(--cor-borda-dourada);
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
   max-width: 80vh;
   display: flex;
   flex-direction: column;
-  
 }
 
 .menu-conteudo h3 {
   margin-top: 0;
-  font-family: var(--fonte-destaque);
+  font-family: var(--fonte-padrao);
   font-size: 1.5rem;
-  }
+  font-weight: light;
+  color: var(--cor-fundo-botao);
+}
 
 #galeria-fundos {
   display: flex;
-  gap: 15px;
+  gap: 20px;
   margin: 20px 0;
   padding: 10px;
   overflow-x: auto;
@@ -332,7 +334,7 @@ button .icon {
 .botao-fechar {
   background-color: var(--cor-destaque-amarelo);
   color: var(--cor-fundo-botao);
-  box-shadow: 5px 10px 9px var(--cor-gradiente-inicio);
+  box-shadow: 0 1px 9px var(--cor-gradiente-inicio);
   border: none;
   padding: 10px 25px;
   border-radius: 20px;
@@ -345,7 +347,7 @@ button .icon {
 }
 
 .botao-fechar:hover {
-  transform: scale(1.05s);
+  transform: scale(1.05);
 }
 
 #galeria-fundos::-webkit-scrollbar {
@@ -353,21 +355,146 @@ button .icon {
 }
 
 #galeria-fundos::-webkit-scrollbar-track {
-  background: var(--cor-texto-claro);
+  background: var(--cor-gradiente-inicio);
   border-radius: 10px;
 }
 
 #galeria-fundos::-webkit-scrollbar-thumb {
-  background-color: var(--cor-gradiente-inicio);
+  background-color: var(--cor-borda-dourada);
   border-radius: 20px;
-  border: 2px solid var(--cor-texto-claro);
+  border: 2px solid var(--cor-sombra-escura);
 }
 
 #galeria-fundos::-webkit-scrollbar-thumb:hover {
   background-color: var(--cor-borda-dourada);
 }
 
-/* =================================================================== */
+#menu-configuracao {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.menu-configuracao {
+  background-color: var(--cor-texto-claro);
+  padding: 4rem;
+  border-radius: 20px;
+  text-align: center;
+  color: var(--cor-borda-dourada);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+  max-width: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Descrição do menu */
+.config-descricao {
+  font-family: var(--fonte-destaque);
+  color: var(--cor-sombra-escura);
+  font-size: 1.5rem;
+  opacity: 0.8;
+  margin-top: 20px;
+  letter-spacing: 2px;
+}
+
+.config-opcoes {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 5px;
+  margin: 20px 0;
+  width: 100%;
+}
+/* Grupo de cada label + input */
+.input-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+/* Estilo do texto (Pomodoro, Pausa Curta, etc) */
+.input-grupo label {
+  font-family: var(--fonte-padrao);
+  font-weight: light;
+  font-size: 1.2rem;
+  color: var(--cor-gradiente-fim);
+  letter-spacing: 1px;
+  padding-bottom: 2px;
+}
+/* Estilo da caixinha de número */
+.input-grupo input[type="number"] {
+  background-color: var(--cor-fundo-botao);
+  color: var(--cor-destaque-amarelo);
+  border: 1px solid var(--cor-borda-dourada);
+  border-radius: 50px;
+  width: 150px;
+  padding: 8px;
+  text-align: center;
+  font-family: var(--fonte-destaque);
+  font-size: 1.5em;
+  font-weight: bold;
+}
+/* Remove as setinhas de aumentar/diminuir no Chrome, Safari, etc. */
+.input-grupo input[type="number"]::-webkit-inner-spin-button,
+.input-grupo input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.menu-botoes-config {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.botao-salvar {
+  background-color: var(--cor-fundo-botao);
+  color: var(--cor-texto-claro);
+  box-shadow: 2px 2px px var(--cor-sombra-escura);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--fonte-padrao);
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
+
+.botao-fechar-config {
+  background-color: transparent;
+  border: 1px solid var(--cor-borda-dourada);
+  color: var(--cor-sombra-escura);
+  padding: 10px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: var(--fonte-padrao);
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.botao-salvar:hover,
+.botao-fechar-config:hover {
+  transform: scale(1.05);
+
+}
+
+.botao-fechar-config:hover {
+  background-color: var(--cor-sombra-escura);
+  color: var(--cor-texto-claro);
+}
+
+/* ========================n=========================================== */
 /* RODAPÉ E RESPONSIVIDADE
 /* =================================================================== */
 
@@ -393,8 +520,6 @@ footer a:hover {
 
 /* Regras aplicadas apenas em telas com largura máxima de 768px (celulares/tablets). */
 @media (max-width: 768px) {
-
-
   body {
     background-position: center center;
   }
@@ -440,7 +565,7 @@ footer a:hover {
     width: 30px;
     height: 30px;
   }
-  
+
   .icon-menu {
     top: 15px;
     left: 15px;
@@ -450,17 +575,51 @@ footer a:hover {
     width: 95%;
   }
 
-.menu-conteudo {
+  .menu-conteudo {
     width: 70%;
     height: 50%;
     margin: auto;
   }
-  
+
   img {
     max-width: 50%;
     height: auto;
   }
+  #menu-configuracao .menu-conteudo {
+    width: 60vw;
+    max-width: 400px;
+    height: auto;
+    padding: 2.5rem;
+  }
 
+  #menu-configuracao .config-opcoes {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 30px;
+  }
 
-}
+  #menu-configuracao .input-grupo {
+    width: 100%;
+  }
 
+  #menu-configuracao .input-grupo input[type="number"] {
+    width: 70%;
+    padding: 12px;
+    font-size: 1.8rem;
+  }
+  #menu-configuracao .menu-botoes-config {
+    display: flex; /* Precisa do display flex para o flex-direction funcionar */
+    flex-direction: column;
+    width: 100%; /* Ocupa toda a largura disponível */
+    gap: 12px;
+  }
+  #menu-configuracao .menu-botoes-config button {
+    width: 100%;
+  }
+.icon-menu img {
+  width: 50px;
+  height: 50px;
+
+  }
+ }
