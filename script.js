@@ -1,18 +1,22 @@
-// ===================================================================
-// VARIÁVEIS GLOBAIS QUE NÃO DEPENDEM DO HTML
-// ===================================================================
+// ====================================================================================
+// O CÉREBRO DA APLICAÇÃO: VARIÁVEIS GLOBAIS
+// ====================================================================================
+// Estas são as "gavetas de memória" principais do nosso projeto.
+// Elas guardam o estado atual do timer e as configurações.
+
+// Define os tempos padrão em SEGUNDOS. Multiplicar por 60 converte minutos para segundos.
 let tempoPomodoroPadrao = 25 * 60;
 let tempoPausaCurtaPadrao = 5 * 60;
 let tempoPausaLongaPadrao = 15 * 60;
 
+// Variáveis de ESTADO: elas mudam o tempo todo enquanto o usuário interage.
+let tempo = tempoPomodoroPadrao;   // O contador regressivo principal. Começa com o tempo do Pomodoro.
+let intervalo = null;             // Guarda o "ID" do nosso timer (do setInterval). É null quando está pausado.
+let modoAtual = "pomodoro";        // Diz qual modo está ativo: "pomodoro", "pausa-curta" ou "pausa-longa".
+let ciclosPomodoro = 0;            // Conta quantos Pomodoros foram completados para saber quando fazer a pausa longa.
+let indiceFundoAtual = 0;          // Guarda a posição do fundo de tela atual (não usado neste código, mas útil para futuras features).
 
-let tempo = tempoPomodoroPadrao;
-let intervalo = null;
-let modoAtual = "pomodoro";
-let ciclosPomodoro = 0;
-let indiceFundoAtual = 0;
-
-// Lista de fundos como uma lista SIMPLES de caminhos.
+// Nossa galeria de imagens. Para adicionar um fundo novo, basta adicionar o caminho da imagem aqui!
 const fundosDeTela = [
     
   'assets/backgrounds/amigas-cafe.jpg',
@@ -44,127 +48,147 @@ const fundosDeTela = [
     
 ];
 
-// ===================================================================
-// FUNÇÕES DO PROJETO
-// ===================================================================
+// ====================================================================================
+// AS FERRAMENTAS: FUNÇÕES DO PROJETO
+// ====================================================================================
+// Funções são como "receitas" de código que podemos chamar várias vezes.
 
 /**
- * Atualiza o display do timer na tela e o título da página.
- * @param {HTMLElement} elementoTimer - O elemento HTML onde o tempo será exibido.
+ * O PLACAR DO JOGO: Atualiza o tempo no centro da tela e no título da aba do navegador.
+ * @param {HTMLElement} elementoTimer - A "caixinha" no HTML (a <div>) onde o tempo aparece.
  */
 function atualizarDisplay(elementoTimer) {
-    const minutos = Math.floor(tempo / 60); // Calcula os minutos inteiros.
-    const segundos = tempo % 60; // Calcula os segundos restantes.
-    // Formata o tempo para sempre ter dois dígitos (ex: 05:09).
+    const minutos = Math.floor(tempo / 60); // Pega a parte inteira da divisão para achar os minutos.
+    const segundos = tempo % 60;             // Pega o RESTO da divisão para achar os segundos.
+    
+    // Formata os números para que sempre tenham dois dígitos (ex: 7 vira "07").
     const tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
     
-    if (elementoTimer) elementoTimer.textContent = tempoFormatado; // Atualiza o texto no HTML.
-    document.title = `☕ ${tempoFormatado} | CozyCoffee`; // Atualiza o título da aba do navegador.
+    // Se o elemento do timer existir, atualiza o texto dele.
+    if (elementoTimer) elementoTimer.textContent = tempoFormatado;
+    // Atualiza o título da aba do navegador, útil para o usuário ver o tempo mesmo em outra aba.
+    document.title = `☕ ${tempoFormatado} | CozyCoffee`;
 }
 
 /**
- * Inicia a contagem regressiva do timer.
+ * O MOTOR DO TIMER: Inicia a contagem regressiva.
  */
 function IniciarTimer() {
-    // Se o intervalo já estiver rodando, não faz nada. Isso evita criar múltiplos timers.
+    // Essa linha é uma "trava de segurança". Se o 'intervalo' já tem um valor,
+    // significa que o timer já está rodando. O 'return' impede que a função continue,
+    // evitando que múltiplos timers rodem ao mesmo tempo (o que causaria bugs).
     if (intervalo) return;
 
-    // Inicia um intervalo que executa a função a cada 1000ms (1 segundo).
+    // A mágica acontece aqui! setInterval é uma ordem para o navegador:
+    // "Execute o código a seguir a cada 1000 milissegundos (ou seja, 1 segundo)".
+    // Guardamos o ID dessa ordem na variável 'intervalo' para podermos pará-la depois.
     intervalo = setInterval(() => {
         if (tempo > 0) {
-            tempo--; // Diminui 1 segundo.
-            atualizarDisplay(document.getElementById("timer-display")); // Atualiza a tela.
+            tempo--; // Se o tempo não acabou, diminui 1 segundo.
+            atualizarDisplay(document.getElementById("timer-display")); // E atualiza o placar.
         } else {
             // Se o tempo chegou a zero:
-            clearInterval(intervalo); // Para o contador.
-            intervalo = null; // Reseta a variável do intervalo.
-            const sound = document.getElementById("sound-end-timer");
-            if (sound) sound.play(); // Toca o som de finalização.
-            iniciarProximoModo(); // Passa para o próximo modo (pausa ou pomodoro).
+            clearInterval(intervalo); // Manda o navegador PARAR a ordem que demos antes.
+            intervalo = null;         // "Limpa" a variável para indicar que o timer está parado.
+            const sound = document.getElementById("sound-end-timer"); // Pega o elemento de áudio.
+            if (sound) sound.play();  // Toca o som de alarme.
+            iniciarProximoModo();   // Chama a função que prepara o próximo ciclo (pausa ou pomodoro).
         }
     }, 1000);
 }
 
 /**
- * Pausa a contagem regressiva do timer.
+ * O FREIO: Pausa a contagem regressiva.
  */
 function pausarTimer() {
-    clearInterval(intervalo); // Para o intervalo usando o ID que guardamos.
-    intervalo = null; // "Limpa" a variável para indicar que o timer está parado.
+    clearInterval(intervalo); // Simplesmente manda o navegador parar o timer.
+    intervalo = null;         // E avisa nosso código que não há mais timer rodando.
 }
 
 /**
- * Reseta o timer para o valor inicial do modo atual.
+ * O BOTÃO DE REINICIAR: Volta o tempo para o valor inicial do modo atual.
  */
 function resetarTimer() {
-    pausarTimer(); // Garante que qualquer timer rodando seja parado.
-    // Verifica o modo atual e redefine a variável 'tempo' para o valor padrão correspondente.
+    pausarTimer(); // Primeiro, garantimos que o timer pare.
+    
+    // Usamos um 'if/else if' para verificar qual modo está ativo
+    // e carregar o tempo padrão correspondente na variável 'tempo'.
     if (modoAtual === "pomodoro") tempo = tempoPomodoroPadrao;
     else if (modoAtual === "pausa-curta") tempo = tempoPausaCurtaPadrao;
     else if (modoAtual === "pausa-longa") tempo = tempoPausaLongaPadrao;
-    // Atualiza o display para mostrar o tempo resetado.
+    
+    // Finalmente, atualizamos o placar com o tempo reiniciado.
     atualizarDisplay(document.getElementById("timer-display"));
 }
 
 /**
- * Troca o modo do timer (Pomodoro, Pausa Curta, Pausa Longa) quando um botão é clicado.
- * @param {HTMLElement} botao - O botão de modo que foi clicado.
+ * O SELETOR DE MODO: Muda o estado do timer quando o usuário clica em um dos botões de modo.
+ * @param {HTMLElement} botao - O botão específico que o usuário clicou (pomodoro, pausa-curta, etc.).
  */
 function trocarModo(botao) {
+    // Pega TODOS os botões de modo.
     const botoesModo = document.querySelectorAll(".modo-botao");
-    botoesModo.forEach(b => b.classList.remove("ativo")); // Remove a classe 'ativo' de todos os botões.
-    botao.classList.add("ativo"); // Adiciona a classe 'ativo' apenas no botão clicado.
+    // Passa por cada um deles e remove a classe "ativo" (para o estilo visual).
+    botoesModo.forEach(b => b.classList.remove("ativo"));
+    // Adiciona a classe "ativo" APENAS no botão que foi clicado.
+    botao.classList.add("ativo");
     
-    modoAtual = botao.id; // Atualiza a variável de estado 'modoAtual'.
+    // Atualiza a variável que controla o modo atual com o ID do botão clicado.
+    modoAtual = botao.id;
     
     // Define o tempo inicial de acordo com o novo modo.
     if (botao.id === "pomodoro") tempo = tempoPomodoroPadrao;
     if (botao.id === "pausa-curta") tempo = tempoPausaCurtaPadrao;
     if (botao.id === "pausa-longa") tempo = tempoPausaLongaPadrao;
     
-    pausarTimer(); // Pausa o timer ao trocar de modo.
-    atualizarDisplay(document.getElementById("timer-display")); // Atualiza a tela com o novo tempo.
+    pausarTimer(); // Por segurança, o timer é pausado ao trocar de modo.
+    atualizarDisplay(document.getElementById("timer-display")); // Atualiza o placar.
 }
 
 /**
- * Inicia o próximo ciclo automaticamente (Pomodoro -> Pausa, Pausa -> Pomodoro).
+ * O DIRETOR DE ORQUESTRA: Inicia o próximo ciclo automaticamente quando um termina.
  */
 function iniciarProximoModo() {
     if (modoAtual === 'pomodoro') {
-        ciclosPomodoro++; // Incrementa o contador de ciclos.
-        // Se completou 4 ciclos, inicia uma pausa longa.
+        ciclosPomodoro++; // Se terminamos um pomodoro, contamos +1.
+        
+        // O operador '%' (módulo) nos dá o resto de uma divisão.
+        // Se o número de ciclos dividido por 4 dá resto 0, significa que completamos 4 ciclos.
         if (ciclosPomodoro % 4 === 0) {
-            trocarParaModo('pausa-longa');
-        } else { // Caso contrário, inicia uma pausa curta.
-            trocarParaModo('pausa-curta');
+            trocarParaModo('pausa-longa'); // Hora da pausa longa!
+        } else {
+            trocarParaModo('pausa-curta'); // Se não, só uma pausa curta.
         }
-    } else { // Se estava em qualquer tipo de pausa, volta para o pomodoro.
+    } else {
+        // Se estávamos em qualquer tipo de pausa, o próximo ciclo é sempre um pomodoro.
         trocarParaModo('pomodoro');
     }
-    // Inicia o novo timer automaticamente após uma pequena espera de 1 segundo.
+    // Espera 1 segundo (para o usuário respirar) e então inicia o timer do novo modo.
     setTimeout(IniciarTimer, 1000);
 }
 
 /**
- * Função auxiliar para encontrar e ativar um modo pelo seu ID.
- * @param {string} idModo - O ID do modo para o qual queremos trocar ('pomodoro', 'pausa-curta', etc).
+ * O AJUDANTE: Uma função pequena que ajuda a 'iniciarProximoModo' a ativar um modo pelo seu nome.
+ * @param {string} idModo - O nome do modo para o qual queremos trocar (ex: 'pausa-longa').
  */
 function trocarParaModo(idModo) {
-    const botaoAlvo = document.getElementById(idModo);
+    const botaoAlvo = document.getElementById(idModo); // Encontra o botão pelo ID.
     if (botaoAlvo) {
-        trocarModo(botaoAlvo);
+        trocarModo(botaoAlvo); // Usa a função que já temos para fazer a troca.
     }
 }
 
-// ===================================================================
-// CÓDIGO PRINCIPAL
-// Este código só roda quando o HTML está 100% carregado no navegador.
-// ===================================================================
+// ====================================================================================
+// O PONTO DE PARTIDA DE TUDO: CÓDIGO PRINCIPAL
+// ====================================================================================
+// O 'DOMContentLoaded' é um evento que o navegador dispara quando a página HTML
+// foi completamente carregada. Colocamos nosso código principal aqui dentro para garantir
+// que ele só vai rodar quando todos os botões e divs já existirem na página.
 
 window.addEventListener('DOMContentLoaded', () => {
 
-    // --- SELETORES DE ELEMENTOS ---
-    // "Pegamos" os elementos do HTML e guardamos em variáveis para poder manipulá-los.
+    // --- A CAIXA DE FERRAMENTAS: SELETORES DE ELEMENTOS ---
+    // Guardamos os elementos do HTML em variáveis para acessá-los de forma fácil e rápida.
     const timer = document.getElementById("timer-display");
     const startBtn = document.getElementById("start");
     const pauseBtn = document.getElementById("pause");
@@ -182,45 +206,46 @@ window.addEventListener('DOMContentLoaded', () => {
     const inputPausaCurta = document.getElementById('input-pausa-curta');
     const inputPausaLonga = document.getElementById('input-pausa-longa');
 
-    // --- CARREGAMENTO INICIAL (LocalStorage) ---
-    // Busca os dados salvos no navegador do usuário para personalizar a experiência.
+    // --- A MEMÓRIA DO USUÁRIO: CARREGANDO DADOS DO localStorage ---
+    // O localStorage é um pequeno "depósito" no navegador onde podemos guardar informações
+    // que persistem mesmo que o usuário feche a aba.
     const tempoSalvoPomodoro = localStorage.getItem('tempoPomodoro');
     const tempoSalvoPausaCurta = localStorage.getItem('tempoPausaCurta');
     const tempoSalvoPausaLonga = localStorage.getItem('tempoPausaLonga');
 
-    // Se houver tempos salvos, atualiza as variáveis padrão com eles.
+    // Verificamos se há algum tempo salvo. Se houver, usamos ele no lugar do padrão.
     if (tempoSalvoPomodoro) tempoPomodoroPadrao = parseInt(tempoSalvoPomodoro);
     if (tempoSalvoPausaCurta) tempoPausaCurtaPadrao = parseInt(tempoSalvoPausaCurta);
     if (tempoSalvoPausaLonga) tempoPausaLongaPadrao = parseInt(tempoSalvoPausaLonga);
 
-    // Atualiza os valores nos inputs do menu de configurações para refletir os tempos atuais.
+    // Atualiza os 'inputs' no menu de configurações para que eles mostrem os valores atuais (sejam os padrão ou os salvos).
     inputPomodoro.value = tempoPomodoroPadrao / 60;
     inputPausaCurta.value = tempoPausaCurtaPadrao / 60;
     inputPausaLonga.value = tempoPausaLongaPadrao / 60;
     
-    // Carrega o último fundo de tela salvo pelo usuário.
+    // Carrega o último fundo de tela que o usuário escolheu.
     const fundoSalvo = localStorage.getItem('fundoSalvoCozyCoffee');
     if (fundoSalvo) {
         document.body.style.backgroundImage = `url('${fundoSalvo}')`;
     }
 
-    // --- EVENT LISTENERS ---
-    // Conecta as funções aos eventos de clique dos botões.
+    // --- CONECTANDO OS FIOS: EVENT LISTENERS ---
+    // 'addEventListener' é o "ouvinte de eventos". Ele fica esperando uma ação do usuário
+    // (como um 'click') para disparar uma de nossas funções (a "receita").
     startBtn.addEventListener("click", IniciarTimer);
     pauseBtn.addEventListener("click", pausarTimer);
     
-    // <<<< AQUI ESTAVA O ERRO >>>>
-    // O código original era: resetBtn.addEventListener("click", resetBtn.addEventListener("click", resetarTimer));
-    // Isso aninhava um addEventListener dentro do outro, fazendo com que o segundo argumento se tornasse 'undefined' e o evento não funcionasse.
-    // A forma correta é simplesmente passar o nome da função que deve ser executada.
+    // Aqui estava o seu bug! O correto é apenas passar o nome da função ('resetarTimer')
+    // como o segundo argumento do "ouvinte".
     resetBtn.addEventListener("click", resetarTimer);
 
-    // Adiciona um listener para cada botão de modo.
+    // Como temos vários botões de modo, passamos por cada um ('forEach')
+    // e adicionamos um "ouvinte" de clique individualmente.
     botoesModo.forEach(botao => {
         botao.addEventListener("click", () => trocarModo(botao));
     });
 
-    // Lógica para abrir e fechar o menu de fundos.
+    // Lógica para abrir/fechar o menu de fundos adicionando/removendo uma classe CSS.
     if (botaoMudarFundo) {
         botaoMudarFundo.addEventListener('click', () => {
             menuFundos.classList.remove('escondido');
@@ -232,7 +257,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Lógica para abrir e fechar o menu de configurações.
+    // Mesma lógica de abrir/fechar para o menu de configurações.
     if (botaoConfig) {
         botaoConfig.addEventListener('click', () => {
             menuConfig.classList.remove('escondido');
@@ -244,52 +269,53 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lógica para salvar as novas configurações de tempo.
+    // Lógica para salvar as novas configurações de tempo quando o usuário clica em "Salvar".
     if (botaoSalvarConfig) {
         botaoSalvarConfig.addEventListener('click', () => {
-            // Pega os valores dos inputs e converte para segundos.
+            // Pega os valores dos inputs (que estão em minutos) e já converte para segundos.
             const novoPomodoro = inputPomodoro.value * 60;
             const novaPausaCurta = inputPausaCurta.value * 60;
             const novaPausaLonga = inputPausaLonga.value * 60;
 
-            // Valida se os valores são positivos antes de salvar.
+            // Uma pequena validação para garantir que os tempos não sejam zero ou negativos.
             if (novoPomodoro > 0 && novaPausaCurta > 0 && novaPausaLonga > 0) {
                 tempoPomodoroPadrao = novoPomodoro;
                 tempoPausaCurtaPadrao = novaPausaCurta;
                 tempoPausaLongaPadrao = novaPausaLonga;
 
-                // Salva os novos valores no localStorage para a próxima visita.
+                // Salva os novos valores no localStorage para que sejam lembrados na próxima visita.
                 localStorage.setItem('tempoPomodoro', tempoPomodoroPadrao);
                 localStorage.setItem('tempoPausaCurta', tempoPausaCurtaPadrao);
                 localStorage.setItem('tempoPausaLonga', tempoPausaLongaPadrao);
             }
-            menuConfig.classList.add('escondido'); // Fecha o menu.
-            resetarTimer(); // Reseta o timer para refletir as novas configurações.
-           
+            menuConfig.classList.add('escondido'); // Esconde o menu de configurações.
+            resetarTimer(); // Reseta o timer para que ele já use os novos tempos.
         });
     }
 
-    // --- LÓGICA DO MENU DE FUNDOS ---
-    // Cria dinamicamente as miniaturas de fundo de tela na galeria.
+    // --- CONSTRUINDO A GALERIA MÁGICA: LÓGICA DO MENU DE FUNDOS ---
+    // Este trecho cria as fotinhas de miniatura dinamicamente a partir da nossa lista 'fundosDeTela'.
     if (galeriaFundos) {
         fundosDeTela.forEach((caminhoDaImagem, indice) => {
-            const miniatura = document.createElement('div'); // Cria um novo elemento <div>.
-            miniatura.classList.add('miniatura-fundo'); // Adiciona a classe de estilo.
+            const miniatura = document.createElement('div'); // Cria uma <div> "do nada".
+            miniatura.classList.add('miniatura-fundo');      // Adiciona uma classe para o CSS estilizá-la.
             miniatura.style.backgroundImage = `url('${caminhoDaImagem}')`; // Define a imagem da miniatura.
             
-            // Adiciona um evento de clique em cada miniatura.
+            // Adiciona um "ouvinte" de clique em cada uma das miniaturas que criamos.
             miniatura.addEventListener('click', () => {
                 const fundoEscolhido = fundosDeTela[indice]; // Pega o caminho da imagem clicada.
-                document.body.style.backgroundImage = `url('${fundoEscolhido}')`; // Aplica ao fundo da página.
-                localStorage.setItem('fundoSalvoCozyCoffee', fundoEscolhido); // Salva a escolha.
+                document.body.style.backgroundImage = `url('${fundoEscolhido}')`; // Aplica no fundo da página.
+                localStorage.setItem('fundoSalvoCozyCoffee', fundoEscolhido);    // Salva a escolha no localStorage.
                 menuFundos.classList.add('escondido'); // Fecha o menu.
             });
-            galeriaFundos.appendChild(miniatura); // Adiciona a miniatura criada à galeria no HTML.
+            // Finalmente, "pendura" a miniatura que criamos dentro da galeria no HTML.
+            galeriaFundos.appendChild(miniatura);
         });
     }
 
-    // --- INICIALIZAÇÃO DO DISPLAY ---
-    // Chama resetarTimer() no início para garantir que o timer comece com o valor correto
-    // do modo padrão (pomodoro) ou com os valores carregados do localStorage.
+    // --- A GRANDE ESTREIA: INICIALIZAÇÃO DO DISPLAY ---
+    // Chamamos a função resetarTimer() uma vez no início de tudo.
+    // Isso garante que o placar na tela comece com o valor correto do modo padrão (pomodoro)
+    // ou com os valores personalizados que carregamos do localStorage.
     resetarTimer();
 });
