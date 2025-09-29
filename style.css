@@ -332,10 +332,9 @@ button .icon {
 }
 
 .botao-fechar {
-  background-color: var(--cor-destaque-amarelo);
-  color: var(--cor-fundo-botao);
-  box-shadow: 0 1px 9px var(--cor-gradiente-inicio);
-  border: none;
+  background-color: var(--cor-gradiente-inicio);
+  color: var(--cor-texto-claro);
+  border: 1px solid var(--cor-sombra-escura);
   padding: 10px 25px;
   border-radius: 20px;
   cursor: pointer;
