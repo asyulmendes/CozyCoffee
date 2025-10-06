@@ -205,7 +205,7 @@ button .icon {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap:0;
+  gap: 0;
   position: absolute;
   top: 30px;
   left: 40px;
@@ -398,10 +398,16 @@ button .icon {
 .config-descricao {
   font-family: var(--fonte-destaque);
   color: var(--cor-sombra-escura);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   opacity: 0.8;
-  margin-top: 20px;
+  padding-top: 20px;
   letter-spacing: 2px;
+  margin-bottom: 35px;
+}
+
+.config-descricao p {
+  font-family: var(--fonte-padrao);
+  color: var(--cor-destaque-amarelo);
 }
 
 .config-opcoes {
@@ -485,7 +491,6 @@ button .icon {
 .botao-salvar:hover,
 .botao-fechar-config:hover {
   transform: scale(1.05);
-
 }
 
 .botao-fechar-config:hover {
@@ -493,6 +498,21 @@ button .icon {
   color: var(--cor-texto-claro);
 }
 
+.input-com-unidade {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.unidade-tempo {
+  font-family: var(--fonte-destaque);
+  font-size: 1rem;
+  color: var(--cor-texto-claro);
+  opacity: 0.7;
+  position: relative;
+  top: -55px;
+  left: 40px;
+}
 /* ========================n=========================================== */
 /* RODAPÉ E RESPONSIVIDADE
 /* =================================================================== */
@@ -524,8 +544,9 @@ footer a:hover {
   }
 
   #timer-display {
-    font-size: 30vw;
-    letter-spacing: 0.2rem;
+    font-size: 25vw;
+    letter-spacing: 0.1rem;
+    width: auto;
     height: auto;
     padding: 40px;
   }
@@ -616,9 +637,8 @@ footer a:hover {
   #menu-configuracao .menu-botoes-config button {
     width: 100%;
   }
-.icon-menu img {
-  width: 50px;
-  height: 50px;
-
+  .icon-menu img {
+    width: 50px;
+    height: 50px;
   }
- }
+}
