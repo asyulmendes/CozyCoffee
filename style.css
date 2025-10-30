@@ -33,6 +33,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 /* Camada semitransparente que fica sobre o fundo, para melhorar a legibilidade. */
@@ -225,8 +226,8 @@ button .icon {
 
 /* Tamanho das imagens dentro dos botões do menu. */
 .icon-menu img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 /* Esconde os botões do menu que ainda não têm função. */
@@ -235,10 +236,38 @@ button .icon {
   display: none;
 }
 
-/* Esconde o botão de música. */
-.botao-musica {
-  display: none;
-  
+.botoes-laterais {
+  display: flex;
+  gap: 15px;
+  position: absolute;
+  right: 2%;
+  bottom: 3%;
+  z-index:1000;
+}
+
+.botoes-laterais button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.botoes-laterais button img {
+  width: 40px;
+  height: 40px;
+}
+
+.botoes-laterais button:hover {
+  transform: ease(1.15);
+}
+.botoes-laterais button .tooltipstext {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 8px;
 }
 
 /* Estilo das caixinhas de texto (tooltips) que aparecem no hover. */
@@ -247,10 +276,10 @@ button .icon {
   opacity: 0;
   width: auto;
   white-space: nowrap;
-  background-color: transparent;
+  background-color: var(--cor-texto-claro);
   color: var(--cor-sombra-escura);
   text-align: center;
-  border: 1px solid var(--cor-destaque-amarelo);
+  border: 1px solid var(--cor-sombra-escura);
   border-radius: 20px;
   padding: 5px 10px;
   font-size: 1rem;
@@ -264,13 +293,14 @@ button .icon {
 }
 
 /* Mostra o tooltip quando o mouse passa sobre o botão. */
-.icon-menu button:hover .tooltipstext {
+.icon-menu button:hover .tooltipstext, .botoes-laterais button:hover .tooltipstext {
   visibility: visible;
   opacity: 1;
 }
 
 .escondido {
   display: none !important;
+  
 }
 
 #menu-fundos {
@@ -514,6 +544,18 @@ button .icon {
   top: -55px;
   left: 40px;
 }
+
+#icon-musica, 
+#perfil,
+#picture-in-picture {
+  display: none;
+
+
+}
+ 
+
+
+
 /* ========================n=========================================== */
 /* RODAPÉ E RESPONSIVIDADE
 /* =================================================================== */

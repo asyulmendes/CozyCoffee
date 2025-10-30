@@ -243,6 +243,56 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.style.backgroundImage = `url('${fundoSalvo}')`;
   }
 
+  //  Botão de Tela cheia //
+
+  const botaoTelaCheia = document.querySelector('.botao-fullscreen');
+  const botaoMinScreen = document.querySelector ('.botao-minscreen');
+
+  // Lógica para entrar na tela cheia// 
+
+   if (botaoTelaCheia) {
+        botaoTelaCheia.addEventListener('click', () => {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
+                document.documentElement.msRequestFullscreen();
+            }
+        });
+    }
+
+  // Código para sair da tela cheia //
+
+    if (botaoMinScreen) {
+        botaoMinScreen.addEventListener('click', () => {
+            console.log("Saindo do modo Tela Cheia!");
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { 
+            } else if (document.msExitFullscreen) { 
+                document.msExitFullscreen();
+            }
+        });
+    }
+    /// Cérebro da troca //
+
+    function handleFullscreenChange() {
+      if (document.fullscreenElement) {
+        botaoTelaCheia.classList.add('escondido');
+        botaoMinScreen.classList.remove('escondido');
+      } else {
+        botaoTelaCheia.classList.remove('escondido');
+        botaoMinScreen.classList.add('escondido');
+      }
+    }
+
+    // Diz ao Navegador para chamar a função quando o estado mudar //
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Para Safari
+    document.addEventListener('msfullscreenchange', handleFullscreenChange); // Para IE
+
   // --- CONECTANDO OS FIOS: EVENT LISTENERS ---
   // 'addEventListener' é o "ouvinte de eventos". Ele fica esperando uma ação do usuário
   // (como um 'click') para disparar uma de nossas funções (a "receita").
