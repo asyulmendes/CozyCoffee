@@ -238,6 +238,7 @@ button .icon {
 /* Esconde o botão de música. */
 .botao-musica {
   display: none;
+  
 }
 
 /* Estilo das caixinhas de texto (tooltips) que aparecem no hover. */

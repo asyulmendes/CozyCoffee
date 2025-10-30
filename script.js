@@ -1,7 +1,7 @@
 // ====================================================================================
 // O CÉREBRO DA APLICAÇÃO: VARIÁVEIS GLOBAIS
 // ====================================================================================
-// Estas são as "gavetas de memória" principais do nosso projeto.
+// Estas são as "gavetas de memória" principais do projeto.
 // Elas guardam o estado atual do timer e as configurações.
 
 // Define os tempos padrão em SEGUNDOS. Multiplicar por 60 converte minutos para segundos.
@@ -51,7 +51,7 @@ const fundosDeTela = [
 // Funções são como "receitas" de código que podemos chamar várias vezes.
 
 /**
- * O PLACAR DO JOGO: Atualiza o tempo no centro da tela e no título da aba do navegador.
+ * Atualiza o tempo no centro da tela e no título da aba do navegador.
  * @param {HTMLElement} elementoTimer - A "caixinha" no HTML (a <div>) onde o tempo aparece.
  */
 function atualizarDisplay(elementoTimer) {
@@ -59,7 +59,7 @@ function atualizarDisplay(elementoTimer) {
 
      // Formato de horas
  if (tempo >= 3600) {
-        // A nova matemática para HH:MM:SS
+        // A matemática para HH:MM:SS
         const horas = Math.floor(tempo / 3600);
         const minutos = Math.floor((tempo % 3600) / 60);
         const segundos = tempo % 60;
@@ -69,7 +69,7 @@ function atualizarDisplay(elementoTimer) {
     } 
     //  (se for menos de 1 hora)...
     else {
-        // A matemática antiga que você já conhece
+        
         const minutos = Math.floor(tempo / 60);
         const segundos = tempo % 60;
 
@@ -77,14 +77,14 @@ function atualizarDisplay(elementoTimer) {
         tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
     }
 
-    // O resto da função continua igual, aplicando o resultado na tela e na aba
+    // aplicando o resultado na tela e na aba
     if (elementoTimer) elementoTimer.textContent = tempoFormatado;
     document.title = `☕ ${tempoFormatado} | CozyCoffee`;
 }
 
 
 /**
- * O MOTOR DO TIMER: Inicia a contagem regressiva.
+  Inicia a contagem regressiva.
  */
 function IniciarTimer() {
   // Essa linha é uma "trava de segurança". Se o 'intervalo' já tem um valor,
@@ -92,16 +92,16 @@ function IniciarTimer() {
   // evitando que múltiplos timers rodem ao mesmo tempo (o que causaria bugs).
   if (intervalo) return;
 
-  // A mágica acontece aqui! setInterval é uma ordem para o navegador:
+  // setInterval é uma ordem para o navegador:
   // "Execute o código a seguir a cada 1000 milissegundos (ou seja, 1 segundo)".
   // Guardamos o ID dessa ordem na variável 'intervalo' para podermos pará-la depois.
   intervalo = setInterval(() => {
     if (tempo > 0) {
       tempo--; // Se o tempo não acabou, diminui 1 segundo.
-      atualizarDisplay(document.getElementById("timer-display")); // E atualiza o placar.
+      atualizarDisplay(document.getElementById("timer-display")); // E atualiza o timer.
     } else {
       // Se o tempo chegou a zero:
-      clearInterval(intervalo); // Manda o navegador PARAR a ordem que demos antes.
+      clearInterval(intervalo); // Manda o navegador PARAR a ordem de antes.
       intervalo = null; // "Limpa" a variável para indicar que o timer está parado.
       const sound = document.getElementById("sound-end-timer"); // Pega o elemento de áudio.
       if (sound) sound.play(); // Toca o som de alarme.
@@ -327,9 +327,8 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- A GRANDE ESTREIA: INICIALIZAÇÃO DO DISPLAY ---
+  
   // Chamamos a função resetarTimer() uma vez no início de tudo.
-  // Isso garante que o placar na tela comece com o valor correto do modo padrão (pomodoro)
-  // ou com os valores personalizados que carregamos do localStorage.
+  // Isso garante que o placar na tela comece com o valor correto do modo padrão (pomodoro).
   resetarTimer();
 });
