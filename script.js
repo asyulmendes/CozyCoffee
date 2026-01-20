@@ -16,6 +16,22 @@ let modoAtual = "pomodoro"; // Diz qual modo está ativo: "pomodoro", "pausa-cur
 let ciclosPomodoro = 0; // Conta quantos Pomodoros foram completados para saber quando fazer a pausa longa.
 let indiceFundoAtual = 0; // Guarda a posição do fundo de tela atual (não usado neste código, mas útil para futuras features).
 
+// barra de progresso ===================================================================================
+
+let bolinhaAtual = 0; // Guarda a posição da bolinha atual na barra de progresso.
+function atualizarBolinhas () {
+  const dots = document.querySelectorAll(".dot");
+
+  dots.forEach(dot => dot.classList.remove("active"));
+
+  if (bolinhaAtual >= dots.length) {
+    bolinhaAtual = 0; // Reinicia a contagem se ultrapassar o número de bolinhas
+  }
+
+  if (dots[bolinhaAtual]) {
+    dots[bolinhaAtual].classList.add("active");
+    }
+    }
 // Nossa galeria de imagens. Para adicionar um fundo novo, basta adicionar o caminho da imagem aqui!
 const fundosDeTela = [
   "assets/backgrounds/amigas-cafe.jpg",
@@ -43,6 +59,25 @@ const fundosDeTela = [
   "assets/backgrounds/sofa-casa.jpg",
   "assets/backgrounds/versiculo.jpg",
   "assets/backgrounds/zayne-lendo.jpg",
+  "assets/backgrounds/ceus-moon.jpg",
+  "assets/backgrounds/chuva-tokio.jpg",
+  "assets/backgrounds/corredor-dark.jpg",
+  "assets/backgrounds/escritório-verde.jpg",
+  "assets/backgrounds/landscape-arvores.jpg",
+  "assets/backgrounds/landscape-notebook.jpg",
+  "assets/backgrounds/library-dark.jpg",
+  "assets/backgrounds/menina-cafe.jpg",
+  "assets/backgrounds/menina-janela.jpg",
+  "assets/backgrounds/montanha.jpg",
+  "assets/backgrounds/office-dark.jpg",
+  "assets/backgrounds/office-livros.jpg",
+  "assets/backgrounds/office-poltronas.jpg",
+  "assets/backgrounds/por-do-sol-montanha.jpg",
+  "assets/backgrounds/rio-landscape.jpg",
+  "assets/backgrounds/study-w-me.jpg",
+  "assets/backgrounds/sumero-estudo.jpg",
+  "assets/backgrounds/favonius-landscape.jpg",
+  "assets/backgrounds/favonios-jardim.jpg"
 ];
 
 // ====================================================================================
@@ -130,6 +165,10 @@ function resetarTimer() {
   else if (modoAtual === "pausa-curta") tempo = tempoPausaCurtaPadrao;
   else if (modoAtual === "pausa-longa") tempo = tempoPausaLongaPadrao;
 
+  bolinhaAtual = 0; // Reseta a barra de progresso.
+  ciclosPomodoro = 0; // Reseta o contador de ciclos.
+  atualizarBolinhas(); // Atualiza a barra de progresso.
+
   // Finalmente, atualizamos o placar com o tempo reiniciado.
   atualizarDisplay(document.getElementById("timer-display"));
 }
@@ -164,7 +203,8 @@ function trocarModo(botao) {
 function iniciarProximoModo() {
   if (modoAtual === "pomodoro") {
     ciclosPomodoro++; // Se terminamos um pomodoro, contamos +1.
-
+    bolinhaAtual++;
+    atualizarBolinhas(); // Atualiza a barra de progresso.  
     // O operador '%' (módulo) nos dá o resto de uma divisão.
     // Se o número de ciclos dividido por 4 dá resto 0, significa que completamos 4 ciclos.
     if (ciclosPomodoro % 4 === 0) {
@@ -191,11 +231,13 @@ function trocarParaModo(idModo) {
   }
 }
 
+
+
 // ====================================================================================
 // O PONTO DE PARTIDA DE TUDO: CÓDIGO PRINCIPAL
 // ====================================================================================
 // O 'DOMContentLoaded' é um evento que o navegador dispara quando a página HTML
-// foi completamente carregada. Colocamos nosso código principal aqui dentro para garantir
+// foi completamente ca'rregada. Colocamos nosso código principal aqui dentro para garantir
 // que ele só vai rodar quando todos os botões e divs já existirem na página.
 
 window.addEventListener("DOMContentLoaded", () => {
