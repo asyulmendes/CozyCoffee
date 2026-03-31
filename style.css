@@ -569,15 +569,37 @@ button .icon {
   left: 40px;
 }
 
-#icon-musica, 
-#perfil,
-#picture-in-picture {
-  display: none;
+/* Estilo para o container dentro do PiP */
+.timer-pip-mode {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100vh;
+  gap: 20px;
+  /* Adiciona uma camada escura para o tempo não sumir no fundo */
+  background: rgba(0, 0, 0, 0.4); 
+}
 
+/* Ajusta o tamanho do botão iniciar no modo flutuante */
+.timer-pip-mode .botao-iniciar {
+  width: 140px !important;
+  height: 45px !important;
+  font-size: 1rem !important;
+}
+
+/* Ajusta o botão de pausa */
+.timer-pip-mode .botao-pequeno {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+#icon-musica, 
+#perfil{
+  display: none;
 
 }
  
-
 
 
 /* ========================n=========================================== */

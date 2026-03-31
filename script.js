@@ -19,19 +19,17 @@ let indiceFundoAtual = 0; // Guarda a posição do fundo de tela atual (não usa
 // barra de progresso ===================================================================================
 
 let bolinhaAtual = 0; // Guarda a posição da bolinha atual na barra de progresso.
-function atualizarBolinhas () {
+function atualizarBolinhas() {
   const dots = document.querySelectorAll(".dot");
 
-  dots.forEach(dot => dot.classList.remove("active"));
-
-  if (bolinhaAtual >= dots.length) {
-    bolinhaAtual = 0; // Reinicia a contagem se ultrapassar o número de bolinhas
+  dots.forEach((dot, indice) => {
+    if (indice < ciclosPomodoro) {
+      dot.classList.add("active");
+    } else {
+      dot.classList.remove("active");
+    }
+      });
   }
-
-  if (dots[bolinhaAtual]) {
-    dots[bolinhaAtual].classList.add("active");
-    }
-    }
 // Nossa galeria de imagens. Para adicionar um fundo novo, basta adicionar o caminho da imagem aqui!
 const fundosDeTela = [
   "assets/backgrounds/amigas-cafe.jpg",
@@ -77,7 +75,7 @@ const fundosDeTela = [
   "assets/backgrounds/study-w-me.jpg",
   "assets/backgrounds/sumero-estudo.jpg",
   "assets/backgrounds/favonius-landscape.jpg",
-  "assets/backgrounds/favonios-jardim.jpg"
+  "assets/backgrounds/favonios-jardim.jpg",
 ];
 
 // ====================================================================================
@@ -92,31 +90,29 @@ const fundosDeTela = [
 function atualizarDisplay(elementoTimer) {
   let tempoFormatado; // Variável para guardar o tempo final
 
-     // Formato de horas
- if (tempo >= 3600) {
-        // A matemática para HH:MM:SS
-        const horas = Math.floor(tempo / 3600);
-        const minutos = Math.floor((tempo % 3600) / 60);
-        const segundos = tempo % 60;
-        
-        // Formata o tempo com horas, garantindo sempre 2 dígitos
-        tempoFormatado = `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-    } 
-    //  (se for menos de 1 hora)...
-    else {
-        
-        const minutos = Math.floor(tempo / 60);
-        const segundos = tempo % 60;
+  // Formato de horas
+  if (tempo >= 3600) {
+    // A matemática para HH:MM:SS
+    const horas = Math.floor(tempo / 3600);
+    const minutos = Math.floor((tempo % 3600) / 60);
+    const segundos = tempo % 60;
 
-        // Formata o tempo só com minutos e segundos
-        tempoFormatado = `${String(minutos).padStart(2, '0')}:${String(segundos).padStart(2, '0')}`;
-    }
+    // Formata o tempo com horas, garantindo sempre 2 dígitos
+    tempoFormatado = `${String(horas).padStart(2, "0")}:${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+  }
+  //  (se for menos de 1 hora)...
+  else {
+    const minutos = Math.floor(tempo / 60);
+    const segundos = tempo % 60;
 
-    // aplicando o resultado na tela e na aba
-    if (elementoTimer) elementoTimer.textContent = tempoFormatado;
-    document.title = `☕ ${tempoFormatado} | CozyCoffee`;
+    // Formata o tempo só com minutos e segundos
+    tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+  }
+
+  // aplicando o resultado na tela e na aba
+  if (elementoTimer) elementoTimer.textContent = tempoFormatado;
+  document.title = `☕ ${tempoFormatado} | CozyCoffee`;
 }
-
 
 /**
   Inicia a contagem regressiva.
@@ -197,41 +193,31 @@ function trocarModo(botao) {
   atualizarDisplay(document.getElementById("timer-display")); // Atualiza o placar.
 }
 
-/**
- * O DIRETOR DE ORQUESTRA: Inicia o próximo ciclo automaticamente quando um termina.
- */
 function iniciarProximoModo() {
+
+    const btnPomodoro = document.getElementById("pomodoro");
+    const btnPausaCurta = document.getElementById("pausa-curta");
+    const btnPausaLonga = document.getElementById("pausa-longa");
+
   if (modoAtual === "pomodoro") {
-    ciclosPomodoro++; // Se terminamos um pomodoro, contamos +1.
-    bolinhaAtual++;
-    atualizarBolinhas(); // Atualiza a barra de progresso.  
-    // O operador '%' (módulo) nos dá o resto de uma divisão.
-    // Se o número de ciclos dividido por 4 dá resto 0, significa que completamos 4 ciclos.
+    ciclosPomodoro++; 
+    atualizarBolinhas(); 
+
     if (ciclosPomodoro % 4 === 0) {
-      trocarParaModo("pausa-longa"); // Hora da pausa longa!
+      trocarModo(btnPausaLonga); 
     } else {
-      trocarParaModo("pausa-curta"); // Se não, só uma pausa curta.
+      trocarModo(btnPausaCurta); 
     }
   } else {
-    // Se estávamos em qualquer tipo de pausa, o próximo ciclo é sempre um pomodoro.
-    trocarParaModo("pomodoro");
+    if (modoAtual === "pausa-longa") {
+      ciclosPomodoro = 0; 
+      atualizarBolinhas();
+    } 
+    trocarModo(btnPomodoro);
   }
-  // Espera 1 segundo (para o usuário respirar) e então inicia o timer do novo modo.
+ 
   setTimeout(IniciarTimer, 1000);
 }
-
-/**
- * O AJUDANTE: Uma função pequena que ajuda a 'iniciarProximoModo' a ativar um modo pelo seu nome.
- * @param {string} idModo - O nome do modo para o qual queremos trocar (ex: 'pausa-longa').
- */
-function trocarParaModo(idModo) {
-  const botaoAlvo = document.getElementById(idModo); // Encontra o botão pelo ID.
-  if (botaoAlvo) {
-    trocarModo(botaoAlvo); // Usa a função que já temos para fazer a troca.
-  }
-}
-
-
 
 // ====================================================================================
 // O PONTO DE PARTIDA DE TUDO: CÓDIGO PRINCIPAL
@@ -259,6 +245,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const inputPomodoro = document.getElementById("input-pomodoro");
   const inputPausaCurta = document.getElementById("input-pausa-curta");
   const inputPausaLonga = document.getElementById("input-pausa-longa");
+  const pipBtn = document.getElementById("pip-button");
 
   // --- A MEMÓRIA DO USUÁRIO: CARREGANDO DADOS DO localStorage ---
   // O localStorage é um pequeno "depósito" no navegador onde podemos guardar informações
@@ -287,53 +274,55 @@ window.addEventListener("DOMContentLoaded", () => {
 
   //  Botão de Tela cheia //
 
-  const botaoTelaCheia = document.querySelector('.botao-fullscreen');
-  const botaoMinScreen = document.querySelector ('.botao-minscreen');
+  const botaoTelaCheia = document.querySelector(".botao-fullscreen");
+  const botaoMinScreen = document.querySelector(".botao-minscreen");
 
-  // Lógica para entrar na tela cheia// 
+  // Lógica para entrar na tela cheia//
 
-   if (botaoTelaCheia) {
-        botaoTelaCheia.addEventListener('click', () => {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Safari */
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE11 */
-                document.documentElement.msRequestFullscreen();
-            }
-        });
-    }
+  if (botaoTelaCheia) {
+    botaoTelaCheia.addEventListener("click", () => {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        /* Safari */
+        document.documentElement.webkitRequestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        /* IE11 */
+        document.documentElement.msRequestFullscreen();
+      }
+    });
+  }
 
   // Código para sair da tela cheia //
 
-    if (botaoMinScreen) {
-        botaoMinScreen.addEventListener('click', () => {
-            console.log("Saindo do modo Tela Cheia!");
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { 
-            } else if (document.msExitFullscreen) { 
-                document.msExitFullscreen();
-            }
-        });
-    }
-    /// Cérebro da troca //
-
-    function handleFullscreenChange() {
-      if (document.fullscreenElement) {
-        botaoTelaCheia.classList.add('escondido');
-        botaoMinScreen.classList.remove('escondido');
-      } else {
-        botaoTelaCheia.classList.remove('escondido');
-        botaoMinScreen.classList.add('escondido');
+  if (botaoMinScreen) {
+    botaoMinScreen.addEventListener("click", () => {
+      console.log("Saindo do modo Tela Cheia!");
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
       }
+    });
+  }
+  /// Cérebro da troca //
+
+  function handleFullscreenChange() {
+    if (document.fullscreenElement) {
+      botaoTelaCheia.classList.add("escondido");
+      botaoMinScreen.classList.remove("escondido");
+    } else {
+      botaoTelaCheia.classList.remove("escondido");
+      botaoMinScreen.classList.add("escondido");
     }
+  }
 
-    // Diz ao Navegador para chamar a função quando o estado mudar //
+  // Diz ao Navegador para chamar a função quando o estado mudar //
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange); // Para Safari
-    document.addEventListener('msfullscreenchange', handleFullscreenChange); // Para IE
+  document.addEventListener("fullscreenchange", handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange); // Para Safari
+  document.addEventListener("msfullscreenchange", handleFullscreenChange); // Para IE
 
   // --- CONECTANDO OS FIOS: EVENT LISTENERS ---
   // 'addEventListener' é o "ouvinte de eventos". Ele fica esperando uma ação do usuário
@@ -399,6 +388,63 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // LÓGICA PARA PICTURE IN  PICTURE ====================================================================
+
+  if (pipBtn) {
+    pipBtn.addEventListener("click", async () => {
+      if ("documentPictureInPicture" in window) {
+        try {
+          const pipWindow = await window.documentPictureInPicture.requestWindow(
+            {
+              width: 320,
+              height: 350,
+            },
+          );
+
+          // Copia os estilos para a nova janela flutuante
+          [...document.styleSheets].forEach((styleSheet) => {
+            try {
+              const cssRules = [...styleSheet.cssRules]
+                .map((rule) => rule.cssText)
+                .join("");
+              const style = document.createElement("style");
+              style.textContent = cssRules;
+              pipWindow.document.head.appendChild(style);
+            } catch (e) {
+              const link = document.createElement("link");
+              link.rel = "stylesheet";
+              link.href = styleSheet.href;
+              pipWindow.document.head.appendChild(link);
+            }
+          });
+
+          // Elementos que vão para o PiP
+          const display = document.getElementById("timer-display");
+          const controles = document.querySelector(".botoes-controle");
+
+          const pipContainer = document.createElement("div");
+          pipContainer.classList.add("timer-pip-mode");
+
+          // Movemos os elementos para a janela PiP
+          pipContainer.append(display, controles);
+          pipWindow.document.body.append(pipContainer);
+
+          // Quando fechar o PiP, devolve os elementos para o lugar certo
+          pipWindow.addEventListener("pagehide", () => {
+            const mainContainer = document.querySelector(".container");
+            // Insere antes da barra de progresso ou no final do container
+            mainContainer.appendChild(display);
+            mainContainer.appendChild(controles);
+          });
+        } catch (error) {
+          console.error("Erro ao abrir PiP:", error);
+        }
+      } else {
+        alert("Seu navegador não suporta PiP ainda! Tente no Chrome. 😉");
+      }
+    });
+  }
+
   // --- CONSTRUINDO A GALERIA MÁGICA: LÓGICA DO MENU DE FUNDOS ---
   // Este trecho cria as fotinhas de miniatura dinamicamente a partir da nossa lista 'fundosDeTela'.
   if (galeriaFundos) {
@@ -419,7 +465,6 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  
   // Chamamos a função resetarTimer() uma vez no início de tudo.
   // Isso garante que o placar na tela comece com o valor correto do modo padrão (pomodoro).
   resetarTimer();
