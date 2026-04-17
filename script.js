@@ -245,7 +245,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const inputPomodoro = document.getElementById("input-pomodoro");
   const inputPausaCurta = document.getElementById("input-pausa-curta");
   const inputPausaLonga = document.getElementById("input-pausa-longa");
-  const pipBtn = document.getElementById("pip-button");
+  const pipBtn = document.getElementById("picture-in-picture");
 
   // --- A MEMÓRIA DO USUÁRIO: CARREGANDO DADOS DO localStorage ---
   // O localStorage é um pequeno "depósito" no navegador onde podemos guardar informações
