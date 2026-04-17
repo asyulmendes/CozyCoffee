@@ -390,60 +390,69 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // LÓGICA PARA PICTURE IN  PICTURE ====================================================================
 
-  if (pipBtn) {
-    pipBtn.addEventListener("click", async () => {
-      if ("documentPictureInPicture" in window) {
-        try {
-          const pipWindow = await window.documentPictureInPicture.requestWindow(
-            {
-              width: 320,
-              height: 350,
-            },
-          );
+if (pipBtn) {
+  pipBtn.addEventListener("click", async () => {
+    if ("documentPictureInPicture" in window) {
+      try {
+        const pipWindow = await window.documentPictureInPicture.requestWindow({
+          width: 320,
+          height: 350,
+        });
 
-          // Copia os estilos para a nova janela flutuante
-          [...document.styleSheets].forEach((styleSheet) => {
-            try {
-              const cssRules = [...styleSheet.cssRules]
-                .map((rule) => rule.cssText)
-                .join("");
-              const style = document.createElement("style");
-              style.textContent = cssRules;
-              pipWindow.document.head.appendChild(style);
-            } catch (e) {
-              const link = document.createElement("link");
-              link.rel = "stylesheet";
-              link.href = styleSheet.href;
-              pipWindow.document.head.appendChild(link);
-            }
-          });
+        // 1. Copiar Estilos (Melhorado com promessa de carregamento)
+        const styleLink = document.createElement("link");
+        styleLink.rel = "stylesheet";
+        styleLink.href = "seu-estilo.css"; // Certifique-se de que o caminho está correto
+        pipWindow.document.head.append(styleLink);
 
-          // Elementos que vão para o PiP
-          const display = document.getElementById("timer-display");
-          const controles = document.querySelector(".botoes-controle");
+        // Copiar estilos inline também
+        [...document.styleSheets].forEach((styleSheet) => {
+          try {
+            const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join("");
+            const style = document.createElement("style");
+            style.textContent = cssRules;
+            pipWindow.document.head.appendChild(style);
+          } catch (e) { /* Ignora cross-origin sheets */ }
+        });
 
-          const pipContainer = document.createElement("div");
-          pipContainer.classList.add("timer-pip-mode");
+        // 2. Elementos
+        const display = document.getElementById("timer-display");
+        const controles = document.querySelector(".botoes-controle");
+        const placeholder = document.createElement("div"); // Marcador de lugar
 
-          // Movemos os elementos para a janela PiP
-          pipContainer.append(display, controles);
-          pipWindow.document.body.append(pipContainer);
+        // Criamos um marcador para saber onde devolver os itens depois
+        display.parentNode.insertBefore(placeholder, display);
 
-          // Quando fechar o PiP, devolve os elementos para o lugar certo
-          pipWindow.addEventListener("pagehide", () => {
-            const mainContainer = document.querySelector(".container");
-            // Insere antes da barra de progresso ou no final do container
-            mainContainer.appendChild(display);
-            mainContainer.appendChild(controles);
-          });
-        } catch (error) {
-          console.error("Erro ao abrir PiP:", error);
-        }
-      } else {
-        alert("Seu navegador não suporta PiP ainda! Tente no Chrome. 😉");
+        const pipContainer = document.createElement("div");
+        pipContainer.classList.add("timer-pip-mode");
+        
+        // CSS específico para a janela PiP ficar bonita
+        pipContainer.style.height = "100vh";
+        pipContainer.style.display = "flex";
+        pipContainer.style.flexDirection = "column";
+        pipContainer.style.justifyContent = "center";
+        pipContainer.style.alignItems = "center";
+        pipContainer.style.background = "#1a0f0a"; // Sua cor marrom
+
+        pipContainer.append(display, controles);
+        pipWindow.document.body.append(pipContainer);
+
+        // 3. Devolução Segura
+        pipWindow.addEventListener("pagehide", () => {
+          // Devolve os elementos exatamente para onde eles estavam
+          placeholder.parentNode.insertBefore(display, placeholder);
+          placeholder.parentNode.insertBefore(controles, placeholder);
+          placeholder.remove(); // Remove o marcador
+        });
+
+      } catch (error) {
+        console.error("Erro ao abrir PiP:", error);
       }
-    });
-  }
+    } else {
+      alert("Seu navegador não suporta PiP de documentos ainda!");
+    }
+  });
+}
 
   // --- CONSTRUINDO A GALERIA MÁGICA: LÓGICA DO MENU DE FUNDOS ---
   // Este trecho cria as fotinhas de miniatura dinamicamente a partir da nossa lista 'fundosDeTela'.
