@@ -1,0 +1,6 @@
+# Pastas de arquivos originais pesados
+assets/backgrounds/originais/
+assets/backgrounds/videos-originais/
+
+# Lixo gerado pelo Python
+__pycache__/

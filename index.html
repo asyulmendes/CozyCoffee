@@ -1,179 +1,162 @@
 <!doctype html>
-<!-- Define o tipo de documento como HTML5 -->
 <html lang="pt-br">
-  <!-- Define o idioma do conteúdo da página como português do Brasil -->
   <head>
     <meta charset="UTF-8" />
-    <!-- Define o conjunto de caracteres para UTF-8 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Faz o site ser responsivo em dispositivos móveis -->
     <title>CozyCoffee</title>
-    <!-- Título da página que aparece na aba do navegador -->
 
-    <!-- Link para o CSS externo (style.css) -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Link para a fonte Baloo 2, usada no site -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&family=Chicle&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-    <!-- Link para fontes adicionais do botão 'Iniciar' -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:wght@100..900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
   </head>
 
   <body>
-    <div class="overlay"></div>
+   
+    <div class="overlay" aria-hidden="true"></div>
+    
+    
+  <nav class="icon-menu">
+  <button id="perfil" aria-label="Perfil">
+    <img src="assets/icons/perfil.svg" alt="perfil" />
+    <span class="tooltipstext">Perfil</span>
+  </button>
+
+  <button id="configuracao" aria-label="Configurações">
+    <img src="assets/icons/timer.svg" alt="configuracao" />
+    <span class="tooltipstext">Tempo</span>
+  </button>
+
+
+  <button id="background" aria-label="Trocar Fundo">
+    <img src="assets/icons/troca-fundo.svg" alt="background" />
+    <span class="tooltipstext">Trocar Fundo</span>
+  </button>
+
+  <button id="picture-in-picture" aria-label="Janela Flutuante">
+    <img src="assets/icons/picture-in-picture.svg" alt="picture-in-picture" />
+    <span class="tooltipstext">Janela Flutuante</span>
+  </button>
+</nav>
+    </header>
 
     <main>
-      <!-- Container que envolve todo o conteúdo da página -->
-      <div class="container">
-        <nav class="icon-menu">
-          <!--Menu do site-->
-
-          <button id="perfil">
-            <img src="assets/icons/icone-perfil.svg" alt="perfil" />
-            <span class="tooltipstext"> Perfil </span>
-          </button>
-
-          <button id="configuracao">
-            <img src="assets/icons/icone-configuracao.svg" alt="configuracao" />
-            <span class="tooltipstext"> Configurações</span>
-          </button>
-          <button id="compartilhar">
-            <img src="assets/icons/icon-compartilhar.svg" alt="compartilhar" />
-            <span class="tooltipstext"> Compartilhar</span>
-          </button>
-          <button id="background">
-            <img src="assets/icons/icone-troca-fundo.svg" alt="background" />
-            <span class="tooltipstext"> Trocar Tela</span>
-          </button>
-          <button id="picture-in-picture">
-            <img
-              src="assets/icons/icone-picture-in-picture.svg"
-              alt="picture-in-picture"
-            />
-            <span class="tooltipstext"> Picture in Picture</span>
-          </button>
-        </nav>
-
-        <!-- Seção dos botões para selecionar o modo -->
+        <div class="container">
         <div class="modo-botoes">
-          <button id="pomodoro" class="modo-botao ativo">Pomodoro</button>
-          <!-- Botão para o modo Pomodoro -->
-          <button id="pausa-curta" class="modo-botao">Pausa Curta</button>
-          <!-- Botão para a pausa curta -->
-          <button id="pausa-longa" class="modo-botao">Pausa Longa</button>
-          <!-- Botão para a pausa longa -->
+          <button id="pomodoro" class="modo-botao ativo" aria-label="Pomodoro">Pomodoro</button>
+          <button id="pausa-curta" class="modo-botao" aria-label="Pausa Curta">Pausa Curta</button>
+          <button id="pausa-longa" class="modo-botao" aria-label="Pausa Longa">Pausa Longa</button>
         </div>
 
-        <!-- Área onde o tempo do timer será exibido -->
-        <div id="timer-display">25:00</div>
+        <time id="timer-display" datetime="PT25M" aria-label="Tempo restante">25:00</time>
 
-        <!-- Seção de botões de controle (Iniciar, Pausar, Reiniciar) -->
-        <div class="botoes-controle">
-          <button id="start" class="botao-iniciar">INICIAR</button>
+           <div class="botoes-controle">
+          <button id="start" class="botao-iniciar" aria-label="Iniciar">INICIAR</button>
 
-          <!-- Botão de Pausa com ícone -->
-          <button id="pause" class="botao-pequeno">
-            <img src="assets/icons/icone-pause.svg" alt="Pause" class="icon" />
-            <!-- Ícone de pausa -->
+          <button id="pause" class="botao-pequeno" aria-label="Pausar">
+            <img src="assets/icons/pause.svg" alt="Pause" class="icon" />
           </button>
 
-          <!-- Botão de Reiniciar com ícone -->
-          <button id="reset" class="botao-pequeno">
-            <img
-              src="assets/icons/icone-reiniciar.svg"
-              alt="Reiniciar"
-              class="icon"
-            />
-            <!-- Ícone de reiniciar -->
+          <button id="reset" class="botao-pequeno" aria-label="Reiniciar">
+            <img src="assets/icons/reiniciar.svg" alt="Reiniciar" class="icon" />
           </button>
         </div>
-        <div class="bar-progress">
-          <div class="dot active"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
+
+        <div class="bar-progress" aria-label="Progresso dos ciclos de foco">
+  <div class="dot active" aria-hidden="true"></div>
+  <div class="dot" aria-hidden="true"></div>
+  <div class="dot" aria-hidden="true"></div>
+  <div class="dot" aria-hidden="true"></div>
+</div>
+      </div>
       </div>
     </main>
 
     <aside>
-      <div class="botoes-laterais">
-        <button id="icon-musica">
-          <img src="assets/icons/icone-musica.svg" alt="musica" />
-          <span class="tooltipstext">Música</span>
-        </button>
-        <button class="botao-fullscreen">
-          <img src="assets/icons/icone-fullscreen.svg" alt="fullscreen" />
-          <span class="tooltipstext"> Tela Cheia</span>
-        </button>
-        <button class="botao-minscreen escondido">
-          <img src="assets/icons/icone-minscreen.svg" alt="minscreen" />
-          <span class="tooltipstext"> Minimizar Tela</span>
-        </button>
+  <div class="botoes-laterais">
+    <button id="icon-musica" aria-label="Música">
+      <img src="assets/icons/musica.svg" alt="musica" />
+      <span class="tooltipstext">Música</span>
+    </button>
+    
+    <button class="botao-fullscreen" aria-label="Tela Cheia">
+      <img src="assets/icons/fullscreen.svg" alt="fullscreen" />
+      <span class="tooltipstext">Tela Cheia</span>
+    </button>
+
+    <button class="botao-minscreen escondido" aria-label="Minimizar Tela">
+      <img src="assets/icons/minscreen.svg" alt="minscreen" />
+      <span class="tooltipstext">Minimizar Tela</span>
+    </button>
+  </div>
+</aside>
+
+    <audio id="sound-end-timer" src="assets/sons/finalizacao-som.mp3" preload="auto"></audio>
+
+
+  <dialog id="menu-fundos" class="escondido">
+  <div class="menu-conteudo">
+    
+    <header class="header-galeria">
+      <h3>CATÁLOGO DE BACKGROUNDS</h3>
+      <p>escolha sua vibe para o foco</p>
+    </header>
+
+    <button id="btn-fechar-galeria" class="botao-fechar-x" aria-label="fechar galeria">✕</button>
+
+    <div id="galeria-fundos">
+      
+
+  </div> </div> </dialog>
+
+<dialog id="menu-configuracao" class="escondido">
+  <div class="menu-conteudo">
+    <h3 class="config-descricao">Defina seu tempo de concentração ☕</h3>
+
+    <div class="config-opcoes">
+      <div class="input-grupo">
+        <label for="input-pomodoro">Pomodoro</label>
+        <input type="number" id="input-pomodoro" min="1" value="25" />
+        <span class="unidade-tempo">min</span>
       </div>
-    </aside>
-    <audio
-      id="sound-end-timer"
-      src="assets/sons/finalizacao-som.mp3"
-      preload="auto"
-    ></audio>
-
-    <div id="menu-fundos" class="escondido">
-      <div class="menu-conteudo">
-        <h3>Defina o seu plano de fundo 🪴</h3>
-
-        <div id="galeria-fundos"></div>
-
-        <button id="fechar-menu" class="botao-fechar">Fechar</button>
+      <div class="input-grupo">
+        <label for="input-pausa-curta">Pausa Curta</label>
+        <input type="number" id="input-pausa-curta" min="1" value="5" />
+        <span class="unidade-tempo">min</span>
       </div>
-    </div>
-
-    <div id="menu-configuracao" class="escondido">
-      <div class="menu-conteudo">
-        <h3 class="config-descricao">Defina seu tempo de concentração 🪴</h3>
-
-        <div class="config-opcoes">
-          <div class="input-grupo">
-            <label for="input-pomodoro">Pomodoro</label>
-            <input type="number" id="input-pomodoro" min="1" value="25" />
-            <span class="unidade-tempo">min</span>
-          </div>
-          <div class="input-grupo">
-            <label for="input-pausa-curta">Pausa Curta</label>
-            <input type="number" id="input-pausa-curta" min="1" value="5" />
-            <span class="unidade-tempo">min</span>
-          </div>
-          <div class="input-grupo">
-            <label for="input-pausa-longa">Pausa Longa</label>
-            <input type="number" id="input-pausa-longa" min="1" value="15" />
-            <span class="unidade-tempo">min</span>
-          </div>
-        </div>
-        <div class="menu-botoes-config">
-          <button id="salvar-config" class="botao-salvar">Salvar</button>
-          <button id="fechar-config" class="botao-fechar-config">
-            Cancelar
-          </button>
-        </div>
+      <div class="input-grupo">
+        <label for="input-pausa-longa">Pausa Longa</label>
+        <input type="number" id="input-pausa-longa" min="1" value="15" />
+        <span class="unidade-tempo">min</span>
       </div>
     </div>
 
-    <footer>
-      <a href="https://www.linkedin.com/in/analuysamendes/ " target="_blank">
-        <p>Desenvolvido por Ana Mendes</p>
-      </a>
-    </footer>
-
-    <!-- Link para o arquivo JavaScript (script.js) -->
+    <div class="menu-botoes-config">
+      <button id="salvar-config" class="botao-salvar">Salvar</button>
+      <button id="fechar-config" class="botao-fechar-config">Cancelar</button>
+    </div>
+  </div>
+</dialog>
+   <footer class="footer-cozy">
+  <p>
+     Feito com <dotlottie-wc
+  src="https://lottie.host/a2c5c669-e0cf-4048-bbb2-245ef914f881/KiTtC2B6ZZ.lottie"
+  style="width: 45px; height: 45px"
+  autoplay
+  loop
+></dotlottie-wc> por
+    <a href="https://www.linkedin.com/in/analuysamendes/" target="_blank" rel="noopener noreferrer" class="link-dev">
+      Ana Mendes
+    </a>
+  </p>
+</footer>
+    <div id="creditos-autor" class="creditos-foto"></div>
     <script src="script.js"></script>
   </body>
 </html>

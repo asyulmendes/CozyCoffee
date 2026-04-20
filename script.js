@@ -1,480 +1,530 @@
 // ====================================================================================
-// O CÉREBRO DA APLICAÇÃO: VARIÁVEIS GLOBAIS
+// COZYCOFFEE — TIMER POMODORO
 // ====================================================================================
-// Estas são as "gavetas de memória" principais do projeto.
-// Elas guardam o estado atual do timer e as configurações.
+// Arquitetura: Dividido em Estado Global, Funções Puras (sem contato com HTML),
+// Camada de UI (manipulação de tela) e Eventos (ações do usuário).
+// Isso garante que o código seja fácil de ler, testar e expandir.
+// ====================================================================================
 
-// Define os tempos padrão em SEGUNDOS. Multiplicar por 60 converte minutos para segundos.
-let tempoPomodoroPadrao = 25 * 60;
+
+// ====================================================================================
+// 1. ESTADO GLOBAL
+// ====================================================================================
+// Aqui definimos a "memória central" do app. Qualquer função que precise saber
+// em qual modo estamos ou quanto tempo falta, vai consultar estas variáveis.
+
+let tempoPomodoroPadrao  = 25 * 60; // tempos em segundos
 let tempoPausaCurtaPadrao = 5 * 60;
 let tempoPausaLongaPadrao = 15 * 60;
 
-// Variáveis de ESTADO: elas mudam o tempo todo enquanto o usuário interage.
-let tempo = tempoPomodoroPadrao; // O contador regressivo principal. Começa com o tempo do Pomodoro.
-let intervalo = null; // Guarda o "ID" do nosso timer (do setInterval). É null quando está pausado.
-let modoAtual = "pomodoro"; // Diz qual modo está ativo: "pomodoro", "pausa-curta" ou "pausa-longa".
-let ciclosPomodoro = 0; // Conta quantos Pomodoros foram completados para saber quando fazer a pausa longa.
-let indiceFundoAtual = 0; // Guarda a posição do fundo de tela atual (não usado neste código, mas útil para futuras features).
+let tempo        = tempoPomodoroPadrao; // contador regressivo atual
+let intervalo    = null;                // ID do setInterval; null = timer parado
+let modoAtual    = "pomodoro";          // "pomodoro" | "pausa-curta" | "pausa-longa"
+let ciclosPomodoro = 0;                 // pomodoros completos no ciclo atual
+let displayAtivo = null; // Guardará a referência do relógio (na aba ou no PiP)
+let botaoStartAtivo = null; // Guardará a referência do botão (na aba ou no PiP)
 
-// barra de progresso ===================================================================================
+// ====================================================================================
+// 2. BANCO DE DADOS DE FUNDOS
+// ====================================================================================
+// Fonte central das imagens. Adicionar um objeto aqui atualiza a galeria na tela
+// automaticamente, sem precisar tocar em nenhuma outra parte do código.
 
-let bolinhaAtual = 0; // Guarda a posição da bolinha atual na barra de progresso.
-function atualizarBolinhas() {
-  const dots = document.querySelectorAll(".dot");
 
-  dots.forEach((dot, indice) => {
-    if (indice < ciclosPomodoro) {
-      dot.classList.add("active");
-    } else {
-      dot.classList.remove("active");
-    }
-      });
-  }
-// Nossa galeria de imagens. Para adicionar um fundo novo, basta adicionar o caminho da imagem aqui!
-const fundosDeTela = [
-  "assets/backgrounds/amigas-cafe.jpg",
-  "assets/backgrounds/amor-sinais.jpg",
-  "assets/backgrounds/banco.jpg",
-  "assets/backgrounds/barista-homem.jpg",
-  "assets/backgrounds/barista-janela.jpg",
-  "assets/backgrounds/barista-pausa.jpg",
-  "assets/backgrounds/biblia.jpg",
-  "assets/backgrounds/café-aconchegante.jpg",
-  "assets/backgrounds/cafes-gatos.jpg",
-  "assets/backgrounds/casal-lendo.jpg",
-  "assets/backgrounds/flores-landscape.jpg",
-  "assets/backgrounds/garoto-sentado.jpg",
-  "assets/backgrounds/gatinho-janela.jpg",
-  "assets/backgrounds/gato-xicara.jpg",
-  "assets/backgrounds/hp-grin.jpg",
-  "assets/backgrounds/janela-anime.jpg",
-  "assets/backgrounds/landscape-arte.jpg",
-  "assets/backgrounds/landscape-janelamono.jpg",
-  "assets/backgrounds/mesa-estudos.jpg",
-  "assets/backgrounds/liyue-montanhas.jpg",
-  "assets/backgrounds/namjoon.jpg",
-  "assets/backgrounds/notebook-background.jpg",
-  "assets/backgrounds/sofa-casa.jpg",
-  "assets/backgrounds/versiculo.jpg",
-  "assets/backgrounds/zayne-lendo.jpg",
-  "assets/backgrounds/ceus-moon.jpg",
-  "assets/backgrounds/chuva-tokio.jpg",
-  "assets/backgrounds/corredor-dark.jpg",
-  "assets/backgrounds/escritório-verde.jpg",
-  "assets/backgrounds/landscape-arvores.jpg",
-  "assets/backgrounds/landscape-notebook.jpg",
-  "assets/backgrounds/library-dark.jpg",
-  "assets/backgrounds/menina-cafe.jpg",
-  "assets/backgrounds/menina-janela.jpg",
-  "assets/backgrounds/montanha.jpg",
-  "assets/backgrounds/office-dark.jpg",
-  "assets/backgrounds/office-livros.jpg",
-  "assets/backgrounds/office-poltronas.jpg",
-  "assets/backgrounds/por-do-sol-montanha.jpg",
-  "assets/backgrounds/rio-landscape.jpg",
-  "assets/backgrounds/study-w-me.jpg",
-  "assets/backgrounds/sumero-estudo.jpg",
-  "assets/backgrounds/favonius-landscape.jpg",
-  "assets/backgrounds/favonios-jardim.jpg",
+const bancoDeDadosBackgrounds = [
+
+  //CAFE================================================================
+  { titulo: "Bancada de cafe",   categoria: "cafe", arquivo: "bancada-cafe.webp",      fotografo: "99.films" , link:"https://unsplash.com/pt-br/fotografias/mesas-redondas-de-madeira-marrom-ao-lado-do-sofa-de-couro-preto-yr9l_xQPDL0?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "cafe",              categoria: "cafe", arquivo: "cafe-cafe.webp",         fotografo: "IA" },
+  { titulo: "Cafeteira",         categoria: "cafe", arquivo: "cafeteira-cafe.webp",    fotografo: "nathanmullet", link:"https://unsplash.com/pt-br/fotografias/um-copo-de-liquido-em-uma-maquina-FnPGNOOI6YU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Cafeteria Cozy",    categoria: "cafe", arquivo: "cafeteria - 1.webp",     fotografo: "daanevers" , link:"https://unsplash.com/pt-br/@daanelise?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Cafeteria Externa", categoria: "cafe", arquivo: "cafeteria-fora.webp",    fotografo: "tonylee" , link:"https://unsplash.com/pt-br/fotografias/mesa-de-madeira-marrom-quadrada-8IKf54pc3qk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Cafeteria Noturna", categoria: "cafe", arquivo: "cafeteria-noturna.webp", fotografo: "clemonojeghuo", link:"https://unsplash.com/pt-br/fotografias/pessoa-sentada-dentro-do-restaurante-zlABb6Gke24?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Casal no cafe",     categoria: "cafe", arquivo: "casal-cafe.webp",        fotografo: "nathandumlao", link:"https://unsplash.com/pt-br/fotografias/pessoa-sentada-dentro-do-restaurante-zlABb6Gke24?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Dark cafe",         categoria: "cafe", arquivo: "dark-cafe.webp",         fotografo: "sebastianschuppik", link:"https://unsplash.com/pt-br/fotografias/tables-and-chairs-inside-building-H7xTpvBjJS4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Janela do cafe",    categoria: "cafe", arquivo: "janela-cafe.webp",       fotografo: "khamkéo" , link:"https://unsplash.com/pt-br/fotografias/janela-de-vidro-transparente-ciyy63hP7HA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Vista da Janela",   categoria: "cafe", arquivo: "janela-fora.webp",       fotografo: "notethanun", link:"https://unsplash.com/pt-br/fotografias/um-grupo-de-pessoas-sentadas-em-uma-mesa-do-lado-de-fora-de-um-cafe-AFeiu4paBys?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Truck cafe",        categoria: "cafe", arquivo: "truck-cafe.webp",        fotografo: "jasonan", link:"https://unsplash.com/pt-br/fotografias/um-food-truck-estacionado-na-lateral-de-uma-rua-dC3Mrd-k02Q?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+
+
+  //DARK ACADEMY========================================================
+  { titulo: "Biblioteca", categoria: "dark-academy", arquivo: "bibli-dark.webp", fotografo: "zachplank", link:"https://unsplash.com/pt-br/fotografias/prateleiras-de-livros-de-madeira-marrom-com-livros-o-cpCRdEgxs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Biblioteca Clássica", categoria: "dark-academy", arquivo: "dark-biblioteca.webp", fotografo: "unsplash"},
+  { titulo: "Estante Clássica", categoria: "dark-academy", arquivo: "dark-esta.webp", fotografo: "unsplash" },
+  { titulo: "Livros Antigos", categoria: "dark-academy", arquivo: "dark-livros.webp", fotografo: "jeztimms" ,link:"https://unsplash.com/pt-br/fotografias/acendeu-a-lampada-de-mesa-ao-lado-de-uma-pilha-de-livros-8muUTAmcWU4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Teto Vitoriano", categoria: "dark-academy", arquivo: "dark-teto.webp", fotografo: "johntowner" , link:"https://unsplash.com/pt-br/fotografias/fotografia-de-baixo-angulo-da-janela-de-vidro-do-edificio-pDKoVuXYKxU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Escadaria", categoria: "dark-academy", arquivo: "escadaria.webp", fotografo: "claudiotesta", link:"https://unsplash.com/pt-br/fotografias/catedral-marrom-durante-o-dia-iqeG5xA96M4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Leitura Noturna", categoria: "dark-academy", arquivo: "lib-dark.webp", fotografo: "patrickrobertdoyle", link:"https://unsplash.com/pt-br/fotografias/edificio-interior-OvXht_wi5Ew?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+
+
+  // --- FANTASIA ---
+  
+  { titulo: "Beco Diagonal", categoria: "fantasia", arquivo: "beco-hp.webp", fotografo: "rithikagopal", link:"https://unsplash.com/pt-br/fotografias/dragao-no-topo-do-edificio-durante-o-dia-JK0l2xvN1fY?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Casa do Hobbit", categoria: "fantasia", arquivo: "casa-hobbit.webp", fotografo: "tl", link:"https://unsplash.com/pt-br/fotografias/fotografia-de-casa-esmaecida-IA_BATrHzXo?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Castelo Escuro", categoria: "fantasia", arquivo: "castelo-dark.webp", fotografo: "cedericvandenberghe", link:"https://unsplash.com/pt-br/fotografias/foto-de-closeup-do-castelo-com-nevoa-21DP3hytVHw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Estação Mágica", categoria: "fantasia", arquivo: "estacao-hp.webp", fotografo: "adityavyas", link:"https://unsplash.com/pt-br/fotografias/sinal-vermelho-e-branco-de-nao-fumar-b7MUFydsU64?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Guerreiro", categoria: "fantasia", arquivo: "guerreiro.webp", fotografo: "nikshuliahin", link:"https://unsplash.com/pt-br/fotografias/armadura-de-aco-inoxidavel-cinza-JOzv_pAkcMk?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "O Condado", categoria: "fantasia", arquivo: "hobbit.webp", fotografo: "andresiga", link:"https://unsplash.com/pt-br/fotografias/casa-subterranea-coberta-com-grama-verde-e-plantas-7XKkJVw1d8c?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Janela do Castelo", categoria: "fantasia", arquivo: "janela-castelo.webp", fotografo: "jonathanlarson", link:"https://unsplash.com/pt-br/fotografias/pinheiros-verdes-KuXPQSfykx8?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Mapa Antigo", categoria: "fantasia", arquivo: "mapa.webp", fotografo: "patrickfobian", link:"https://unsplash.com/pt-br/fotografias/um-desenho-de-um-mapa-em-um-pedaco-de-papel-y7hn9WYxK3s?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+{ titulo: "Expresso de Hogwarts", categoria: "fantasia", arquivo: "trem-hp.webp", fotografo: "bk", link:"https://unsplash.com/pt-br/fotografias/train-on-railway-at-daytime-HAl6CKxM3xU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+
+  // --- LANDSCAPE ---
+  { titulo: "Barco na Paisagem", categoria: "landscape", arquivo: "barco-lanscape.webp", fotografo: "roxanazerni", link:"https://unsplash.com/pt-br/fotografias/uma-estrada-com-arvores-e-grama-ao-lado-lBLSMEkHbYs?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Casa no Campo", categoria: "landscape", arquivo: "casa-campo.webp", fotografo: "dansmedley", link:"https://unsplash.com/pt-br/fotografias/casa-ao-lado-do-lago-zmZUCjOVy_k?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Estrada", categoria: "landscape", arquivo: "estrada.webp", fotografo: "johntowner", link:"https://unsplash.com/pt-br/fotografias/estrada-de-concreto-vazia-coberta-cercada-por-tress-altos-com-raios-de-sol-3Kv48NS4WUU?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Floresta", categoria: "landscape", arquivo: "floresta.webp", fotografo: "maritakavelashvili", link:"https://unsplash.com/pt-br/fotografias/foto-aerea-de-arvores-verdes-ugnrXk1129g?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Vista da Paisagem", categoria: "landscape", arquivo: "land-view.webp", fotografo: "unsplash" },
+  { titulo: "Natureza de Outono", categoria: "landscape", arquivo: "natureza-aun.webp", fotografo: "unsplash" },
+  { titulo: "Piano na Natureza", categoria: "landscape", arquivo: "piano.webp", fotografo: "IA" },
+  { titulo: "Pintura de Paisagem", categoria: "landscape", arquivo: "pintura.webp", fotografo: "unsplash" },
+  { titulo: "Ponte na Floresta", categoria: "landscape", arquivo: "ponte-floresta.webp", fotografo: "timswann", link:"https://unsplash.com/pt-br/fotografias/ponte-de-aco-azul-e-marrom-eOpewngf68w?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Tóquio", categoria: "landscape", arquivo: "tokyo-land.webp", fotografo: "unsplash" },
+
+  // --- LIVROS ---
+  { titulo: "Bíblia e Café", categoria: "livros", arquivo: "biblia-cafe.webp", fotografo: "unsplash" },
+  { titulo: "Mundo dos Livros", categoria: "livros", arquivo: "book-land.webp", fotografo: "melodyzimmerman", link:"https://unsplash.com/pt-br/fotografias/uma-sala-de-estar-com-um-sofa-marrom-e-uma-cadeira-marrom-INr3HbMSMSw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Pilhas de Livros", categoria: "livros", arquivo: "books-books.webp", fotografo: "anastasiiakrutota", link:"https://unsplash.com/pt-br/fotografias/livros-marrons-e-pretos-na-prateleira-de-madeira-preta-v1QCJQoD03k?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Livraria Clássica", categoria: "livros", arquivo: "livraria-2.webp", fotografo: "sebastienlederout", link:"https://unsplash.com/pt-br/fotografias/pessoa-sentada-dentro-da-biblioteca-wX_zbzIxclA?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Livros e Café", categoria: "livros", arquivo: "livros-cafe.webp", fotografo: "elinmelaas" , link:"https://unsplash.com/pt-br/fotografias/uma-xicara-de-cafe-esta-sendo-derramada-em-uma-caneca-UsiVoLpTaqI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"},
+  { titulo: "Leitura no Mar", categoria: "livros", arquivo: "livros-mar.webp", fotografo: "reyseven", link:"https://unsplash.com/pt-br/fotografias/livros-marrons-e-pretos-na-prateleira-de-madeira-preta-v1QCJQoD03k?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Morning Coffee", categoria: "livros", arquivo: "morn-coffee.webp", fotografo: "anniespratt", link:"https://unsplash.com/pt-br/fotografias/lencol-branco-e-cinza-52AAiXWoVi0?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Orgulho e Preconceito", categoria: "livros", arquivo: "orgulho-preconceito.webp", fotografo: "elainehowlin", link:"https://unsplash.com/pt-br/fotografias/um-livro-sentado-em-cima-de-uma-mesa-ao-lado-de-uma-xicara-de-cha-eNMMw7ihJ2Y?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+  { titulo: "Xícara e Livro", categoria: "livros", arquivo: "xicara-livro.webp", fotografo: "sixteenmiles", link:"https://unsplash.com/pt-br/fotografias/caneca-de-ceramica-branca-no-livro-branco-GVhAezjtX-4?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText" },
+
+  // --- COZY COFFEE (Originais & Lo-Fi) ---
+  { titulo: "Amor em Sinais", categoria: "cozycoffee", arquivo: "amor-sinais.jpg", fotografo: "IA" },
+  { titulo: "Banco de Praça", categoria: "cozycoffee", arquivo: "banco.jpg", fotografo: "IA" },
+  { titulo: "Barista na Janela", categoria: "cozycoffee", arquivo: "barista-janela.jpg", fotografo: "IA" },
+  { titulo: "Pausa do Barista", categoria: "cozycoffee", arquivo: "barista-pausa.jpg", fotografo: "IA" },
+  { titulo: "Bíblia", categoria: "cozycoffee", arquivo: "biblia.jpg", fotografo: "IA" },
+  { titulo: "Casal Lendo", categoria: "cozycoffee", arquivo: "casal-lendo.jpg", fotografo: "IA" },
+  { titulo: "Lo-Fi Night", categoria: "cozycoffee", arquivo: "cc-lo-fi-night.webp", fotografo: "IA" },
+  { titulo: "Cozy Lo-Fi", categoria: "cozycoffee", arquivo: "cozy-lofi.webp", fotografo: "IA" },
+  { titulo: "Mural Cozy", categoria: "cozycoffee", arquivo: "cozy-mural.webp", fotografo: "IA" },
+  { titulo: "Gatinho na Janela", categoria: "cozycoffee", arquivo: "gatinho-janela.jpg", fotografo: "IA" },
+  { titulo: "Gato na Xícara", categoria: "cozycoffee", arquivo: "gato-xicara.jpg", fotografo: "IA" },
+  { titulo: "Sorriso", categoria: "cozycoffee", arquivo: "hp-grin.jpg", fotografo: "IA" },
+  { titulo: "Janela Anime", categoria: "cozycoffee", arquivo: "janela-anime.jpg", fotografo: "IA" },
+  { titulo: "Arte Landscape", categoria: "cozycoffee", arquivo: "landscape-arte.jpg", fotografo: "IA" },
+  { titulo: "Janela Monocromática", categoria: "cozycoffee", arquivo: "landscape-janelamono.jpg", fotografo: "IA" },
+  { titulo: "Menina na Janela", categoria: "cozycoffee", arquivo: "menina-janela.jpg", fotografo: "IA" },
+  { titulo: "Namjooning", categoria: "cozycoffee", arquivo: "menina-namjooning.webp", fotografo: "IA" },
+  { titulo: "Mesa de Estudos", categoria: "cozycoffee", arquivo: "mesa-estudos.jpg", fotografo: "IA" },
+  { titulo: "Namjoon", categoria: "cozycoffee", arquivo: "namjoon.jpg", fotografo: "IA" },
+  { titulo: "Notebook Background", categoria: "cozycoffee", arquivo: "notebook-background.jpg", fotografo: "IA" },
+  { titulo: "Sofá de Casa", categoria: "cozycoffee", arquivo: "sofa-casa.jpg", fotografo: "IA" },
+  { titulo: "Versículo", categoria: "cozycoffee", arquivo: "versiculo.jpg", fotografo: "IA" },
+  { titulo: "Zayne Lendo", categoria: "cozycoffee", arquivo: "zayne-lendo.jpg", fotografo: "IA" },
+
+
+ // --- BTS ---
+  { titulo: "Álbuns", categoria: "bts", arquivo: "albuns.webp", fotografo: "IA" },
+  { titulo: "Livro", categoria: "bts", arquivo: "bts-livro.webp", fotografo: "IA" },
+  { titulo: "Prateleira", categoria: "bts", arquivo: "bts-prateleira.webp", fotografo: "IA" },
+  { titulo: "Cafeteria", categoria: "bts", arquivo: "cafeteria-bts.webp", fotografo: "IA" },
+  { titulo: "Whale Lo-Fi", categoria: "bts", arquivo: "lo-fi-whale.webp", fotografo: "IA" },
+  { titulo: "Namjoon", categoria: "bts", arquivo: "namjoon.webp", fotografo: "IA" },
+  { titulo: "Seven Boys", categoria: "bts", arquivo: "seven-boys.webp", fotografo: "IA" },
+  { titulo: "Sunrise Whale", categoria: "bts", arquivo: "sunrise-whale.webp", fotografo: "IA" }
 ];
 
+
 // ====================================================================================
-// AS FERRAMENTAS: FUNÇÕES DO PROJETO
+// 3. FUNÇÕES PURAS (Lógica Matemática)
 // ====================================================================================
-// Funções são como "receitas" de código que podemos chamar várias vezes.
+// Funções que recebem um valor, calculam e devolvem uma resposta.
+function formatarTempo(totalSegundos) {
+  const pad = (n) => String(n).padStart(2, "0");
 
-/**
- * Atualiza o tempo no centro da tela e no título da aba do navegador.
- * @param {HTMLElement} elementoTimer - A "caixinha" no HTML (a <div>) onde o tempo aparece.
- */
-function atualizarDisplay(elementoTimer) {
-  let tempoFormatado; // Variável para guardar o tempo final
-
-  // Formato de horas
-  if (tempo >= 3600) {
-    // A matemática para HH:MM:SS
-    const horas = Math.floor(tempo / 3600);
-    const minutos = Math.floor((tempo % 3600) / 60);
-    const segundos = tempo % 60;
-
-    // Formata o tempo com horas, garantindo sempre 2 dígitos
-    tempoFormatado = `${String(horas).padStart(2, "0")}:${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
-  }
-  //  (se for menos de 1 hora)...
-  else {
-    const minutos = Math.floor(tempo / 60);
-    const segundos = tempo % 60;
-
-    // Formata o tempo só com minutos e segundos
-    tempoFormatado = `${String(minutos).padStart(2, "0")}:${String(segundos).padStart(2, "0")}`;
+  if (totalSegundos >= 3600) {
+    const h = Math.floor(totalSegundos / 3600);
+    const m = Math.floor((totalSegundos % 3600) / 60);
+    const s = totalSegundos % 60;
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
   }
 
-  // aplicando o resultado na tela e na aba
-  if (elementoTimer) elementoTimer.textContent = tempoFormatado;
+  const m = Math.floor(totalSegundos / 60);
+  const s = totalSegundos % 60;
+  return `${pad(m)}:${pad(s)}`;
+}
+
+
+// ====================================================================================
+// 4. CAMADA DE UI (Interface do Usuário)
+// ====================================================================================
+// Funções exclusivas para atualizar o visual do site. Sempre que o Estado Global
+function atualizarDisplay() {
+  const tempoFormatado = formatarTempo(tempo);
+  // Usa o nosso GPS para achar o display, onde quer que ele esteja
+  if (displayAtivo) displayAtivo.textContent = tempoFormatado;
   document.title = `☕ ${tempoFormatado} | CozyCoffee`;
 }
 
-/**
-  Inicia a contagem regressiva.
- */
-function IniciarTimer() {
-  // Essa linha é uma "trava de segurança". Se o 'intervalo' já tem um valor,
-  // significa que o timer já está rodando. O 'return' impede que a função continue,
-  // evitando que múltiplos timers rodem ao mesmo tempo (o que causaria bugs).
-  if (intervalo) return;
-
-  // setInterval é uma ordem para o navegador:
-  // "Execute o código a seguir a cada 1000 milissegundos (ou seja, 1 segundo)".
-  // Guardamos o ID dessa ordem na variável 'intervalo' para podermos pará-la depois.
-  intervalo = setInterval(() => {
-    if (tempo > 0) {
-      tempo--; // Se o tempo não acabou, diminui 1 segundo.
-      atualizarDisplay(document.getElementById("timer-display")); // E atualiza o timer.
-    } else {
-      // Se o tempo chegou a zero:
-      clearInterval(intervalo); // Manda o navegador PARAR a ordem de antes.
-      intervalo = null; // "Limpa" a variável para indicar que o timer está parado.
-      const sound = document.getElementById("sound-end-timer"); // Pega o elemento de áudio.
-      if (sound) sound.play(); // Toca o som de alarme.
-      iniciarProximoModo(); // Chama a função que prepara o próximo ciclo (pausa ou pomodoro).
-    }
-  }, 1000);
+function atualizarBolinhas() {
+  document.querySelectorAll(".dot").forEach((dot, indice) => {
+    dot.classList.toggle("active", indice < ciclosPomodoro);
+  });
 }
 
-/**
- * O FREIO: Pausa a contagem regressiva.
- */
-function pausarTimer() {
-  clearInterval(intervalo); // Simplesmente manda o navegador parar o timer.
-  intervalo = null; // E avisa nosso código que não há mais timer rodando.
-}
+
+// ====================================================================================
+// 5. CONTROLE DO TIMER (O Motor)
+// ====================================================================================
+// Controla o andamento do tempo, as pausas e os reinícios da contagem regressiva.
 
 /**
- * O BOTÃO DE REINICIAR: Volta o tempo para o valor inicial do modo atual.
+ * Inicia a contagem regressiva. Possui trava para evitar múltiplos timers rodando.
  */
+function alternarTimer() {
+  if (intervalo) {
+    // Ação de Pausar
+    clearInterval(intervalo);
+    intervalo = null;
+    if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+  } else {
+    // Ação de Iniciar
+    intervalo = setInterval(() => {
+      if (tempo > 0) {
+        tempo--;
+        atualizarDisplay();
+      } else {
+        clearInterval(intervalo);
+        intervalo = null;
+        if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+        
+        const som = document.getElementById("sound-end-timer");
+        if (som) som.play();
+        
+        iniciarProximoModo();
+      }
+    }, 1000);
+    if (botaoStartAtivo) botaoStartAtivo.innerText = "PAUSAR";
+  }
+}
+
 function resetarTimer() {
-  pausarTimer(); // Primeiro, garantimos que o timer pare.
+  clearInterval(intervalo);
+  intervalo = null;
+  if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
 
-  // Usamos um 'if/else if' para verificar qual modo está ativo
-  // e carregar o tempo padrão correspondente na variável 'tempo'.
-  if (modoAtual === "pomodoro") tempo = tempoPomodoroPadrao;
-  else if (modoAtual === "pausa-curta") tempo = tempoPausaCurtaPadrao;
-  else if (modoAtual === "pausa-longa") tempo = tempoPausaLongaPadrao;
+  const temposPadrao = {
+    "pomodoro":    tempoPomodoroPadrao,
+    "pausa-curta": tempoPausaCurtaPadrao,
+    "pausa-longa": tempoPausaLongaPadrao,
+  };
+  tempo = temposPadrao[modoAtual] ?? tempoPomodoroPadrao;
 
-  bolinhaAtual = 0; // Reseta a barra de progresso.
-  ciclosPomodoro = 0; // Reseta o contador de ciclos.
-  atualizarBolinhas(); // Atualiza a barra de progresso.
-
-  // Finalmente, atualizamos o placar com o tempo reiniciado.
-  atualizarDisplay(document.getElementById("timer-display"));
+  ciclosPomodoro = 0;
+  atualizarBolinhas();
+  atualizarDisplay();
 }
 
-/**
- * O SELETOR DE MODO: Muda o estado do timer quando o usuário clica em um dos botões de modo.
- * @param {HTMLElement} botao - O botão específico que o usuário clicou (pomodoro, pausa-curta, etc.).
- */
+// ====================================================================================
+// 6. CONTROLE DE MODO E CICLOS
+// ====================================================================================
+
 function trocarModo(botao) {
-  // Pega TODOS os botões de modo.
-  const botoesModo = document.querySelectorAll(".modo-botao");
-  // Passa por cada um deles e remove a classe "ativo" (para o estilo visual).
-  botoesModo.forEach((b) => b.classList.remove("ativo"));
-  // Adiciona a classe "ativo" APENAS no botão que foi clicado.
+  document.querySelectorAll(".modo-botao").forEach((b) => b.classList.remove("ativo"));
   botao.classList.add("ativo");
 
-  // Atualiza a variável que controla o modo atual com o ID do botão clicado.
   modoAtual = botao.id;
 
-  // Define o tempo inicial de acordo com o novo modo.
-  if (botao.id === "pomodoro") tempo = tempoPomodoroPadrao;
-  if (botao.id === "pausa-curta") tempo = tempoPausaCurtaPadrao;
-  if (botao.id === "pausa-longa") tempo = tempoPausaLongaPadrao;
+  const temposPadrao = {
+    "pomodoro":    tempoPomodoroPadrao,
+    "pausa-curta": tempoPausaCurtaPadrao,
+    "pausa-longa": tempoPausaLongaPadrao,
+  };
+  tempo = temposPadrao[modoAtual] ?? tempoPomodoroPadrao;
 
-  pausarTimer(); // Por segurança, o timer é pausado ao trocar de modo.
-  atualizarDisplay(document.getElementById("timer-display")); // Atualiza o placar.
+  clearInterval(intervalo);
+  intervalo = null;
+  if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+
+  atualizarDisplay(); 
 }
 
 function iniciarProximoModo() {
-
-    const btnPomodoro = document.getElementById("pomodoro");
-    const btnPausaCurta = document.getElementById("pausa-curta");
-    const btnPausaLonga = document.getElementById("pausa-longa");
+  const btnPomodoro   = document.getElementById("pomodoro");
+  const btnPausaCurta = document.getElementById("pausa-curta");
+  const btnPausaLonga = document.getElementById("pausa-longa");
 
   if (modoAtual === "pomodoro") {
-    ciclosPomodoro++; 
-    atualizarBolinhas(); 
-
-    if (ciclosPomodoro % 4 === 0) {
-      trocarModo(btnPausaLonga); 
-    } else {
-      trocarModo(btnPausaCurta); 
-    }
+    ciclosPomodoro++;
+    atualizarBolinhas();
+    trocarModo(ciclosPomodoro % 4 === 0 ? btnPausaLonga : btnPausaCurta);
   } else {
     if (modoAtual === "pausa-longa") {
-      ciclosPomodoro = 0; 
+      ciclosPomodoro = 0;
       atualizarBolinhas();
-    } 
+    }
     trocarModo(btnPomodoro);
   }
- 
-  setTimeout(IniciarTimer, 1000);
+
+  setTimeout(alternarTimer, 1000);
 }
 
 // ====================================================================================
-// O PONTO DE PARTIDA DE TUDO: CÓDIGO PRINCIPAL
+// 7. GALERIA DE FUNDOS
 // ====================================================================================
-// O 'DOMContentLoaded' é um evento que o navegador dispara quando a página HTML
-// foi completamente ca'rregada. Colocamos nosso código principal aqui dentro para garantir
-// que ele só vai rodar quando todos os botões e divs já existirem na página.
+// Lógica para renderizar o menu dinamicamente e aplicar o background escolhido.
+function aplicarBackground(item) {
+  const caminho = `assets/backgrounds/${item.categoria}/${item.arquivo}`;
+  document.body.style.backgroundImage = `url('${caminho}')`;
+  localStorage.setItem("fundoSalvoCozyCoffee", caminho);
+
+  const creditos = document.getElementById("creditos-autor");
+  if (creditos) {
+    if (item.fotografo !== "") {
+      
+      const destinoDoClique = item.link ? item.link : caminho;
+
+      creditos.innerHTML = `<a href="${destinoDoClique}" target="_blank" rel="noopener noreferrer">foto por @${item.fotografo}</a>`;
+      
+      
+      creditos.style.pointerEvents = "auto"; 
+      creditos.style.display = "block";
+      
+    } else {
+      creditos.style.display = "none";
+    }
+  }
+}
+function renderizarGaleria() {
+  const container = document.getElementById("galeria-fundos");
+  if (!container) return;
+
+  container.innerHTML = "";
+  const categorias = [...new Set(bancoDeDadosBackgrounds.map((item) => item.categoria))];
+
+  categorias.forEach((categoria) => {
+    const section = document.createElement("section");
+    section.className = "categoria-fundo";
+
+    const titulo = document.createElement("h4");
+    if (categoria === "cafeteria") titulo.innerText = "CAFÉ";
+    else if (categoria === "dark-academy") titulo.innerText = "DARK ACADEMIA";
+    else if (categoria === "fantasia") titulo.innerText = "FANTASIA";
+    else if (categoria === "landscape") titulo.innerText = "LANDSCAPE";
+    else if (categoria === "livros") titulo.innerText = "LIVROS";
+    else if (categoria === "cozycoffee") titulo.innerText = "COZYCOFFEE ORIGINAL";
+    else if (categoria === "bts") titulo.innerText = "BTS";
+    else titulo.innerText = categoria;
+    
+    section.appendChild(titulo);
+
+    const grid = document.createElement("div");
+    grid.className = "grid-fotos";
+
+    bancoDeDadosBackgrounds
+      .filter((item) => item.categoria === categoria)
+      .forEach((item) => {
+        const miniatura = document.createElement("div");
+        miniatura.className = "fundo-miniatura";
+        miniatura.style.backgroundImage = `url('assets/backgrounds/${item.categoria}/${item.arquivo}')`;
+        miniatura.addEventListener("click", () => aplicarBackground(item));
+        grid.appendChild(miniatura);
+      });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+}
+
+// ====================================================================================
+// 8. INICIALIZAÇÃO E EVENTOS (O Ponto de Partida)
+// ====================================================================================
+// Este bloco só roda quando o HTML está 100% carregado. Ele "liga" os botões
+// às suas funções e restaura os dados que o usuário salvou em visitas anteriores.
 
 window.addEventListener("DOMContentLoaded", () => {
-  // --- A CAIXA DE FERRAMENTAS: SELETORES DE ELEMENTOS ---
-  // Guardamos os elementos do HTML em variáveis para acessá-los de forma fácil e rápida.
-  const timer = document.getElementById("timer-display");
-  const startBtn = document.getElementById("start");
-  const pauseBtn = document.getElementById("pause");
-  const resetBtn = document.getElementById("reset");
-  const botoesModo = document.querySelectorAll(".modo-botao");
-  const botaoMudarFundo = document.getElementById("background");
-  const menuFundos = document.getElementById("menu-fundos");
-  const galeriaFundos = document.getElementById("galeria-fundos");
-  const botaoFecharMenu = document.getElementById("fechar-menu");
-  const botaoConfig = document.getElementById("configuracao");
-  const menuConfig = document.getElementById("menu-configuracao");
+
+  // --- SELETORES DE ELEMENTOS ---
+  const timerDisplay     = document.getElementById("timer-display");
+  const startBtn         = document.getElementById("start");
+  const resetBtn         = document.getElementById("reset");
+  const botoesModo       = document.querySelectorAll(".modo-botao");
+  const botaoMudarFundo  = document.getElementById("background");
+  const menuFundos       = document.getElementById("menu-fundos");
+  const btnFecharGaleria = document.getElementById("btn-fechar-galeria");
+  const botaoConfig      = document.getElementById("configuracao");
+  const menuConfig       = document.getElementById("menu-configuracao");
   const botaoFecharConfig = document.getElementById("fechar-config");
   const botaoSalvarConfig = document.getElementById("salvar-config");
-  const inputPomodoro = document.getElementById("input-pomodoro");
-  const inputPausaCurta = document.getElementById("input-pausa-curta");
-  const inputPausaLonga = document.getElementById("input-pausa-longa");
-  const pipBtn = document.getElementById("picture-in-picture");
+  const inputPomodoro    = document.getElementById("input-pomodoro");
+  const inputPausaCurta  = document.getElementById("input-pausa-curta");
+  const inputPausaLonga  = document.getElementById("input-pausa-longa");
+  const pipBtn           = document.getElementById("picture-in-picture");
+  const botaoTelaCheia   = document.querySelector(".botao-fullscreen");
+  const botaoMinScreen   = document.querySelector(".botao-minscreen");
 
-  // --- A MEMÓRIA DO USUÁRIO: CARREGANDO DADOS DO localStorage ---
-  // O localStorage é um pequeno "depósito" no navegador onde podemos guardar informações
-  // que persistem mesmo que o usuário feche a aba.
-  const tempoSalvoPomodoro = localStorage.getItem("tempoPomodoro");
-  const tempoSalvoPausaCurta = localStorage.getItem("tempoPausaCurta");
-  const tempoSalvoPausaLonga = localStorage.getItem("tempoPausaLonga");
+  // Ligando o GPS Inicial!
+  displayAtivo = timerDisplay;
+  botaoStartAtivo = startBtn;
 
-  // Verificamos se há algum tempo salvo. Se houver, usamos ele no lugar do padrão.
-  if (tempoSalvoPomodoro) tempoPomodoroPadrao = parseInt(tempoSalvoPomodoro);
-  if (tempoSalvoPausaCurta)
-    tempoPausaCurtaPadrao = parseInt(tempoSalvoPausaCurta);
-  if (tempoSalvoPausaLonga)
-    tempoPausaLongaPadrao = parseInt(tempoSalvoPausaLonga);
 
-  // Atualiza os 'inputs' no menu de configurações para que eles mostrem os valores atuais (sejam os padrão ou os salvos).
-  inputPomodoro.value = tempoPomodoroPadrao / 60;
-  inputPausaCurta.value = tempoPausaCurtaPadrao / 60;
-  inputPausaLonga.value = tempoPausaLongaPadrao / 60;
+  // --- CARREGAMENTO DE DADOS SALVOS (localStorage) ---
+  const pomodoroPersistido   = localStorage.getItem("tempoPomodoro");
+  const pausaCurtaPersistida = localStorage.getItem("tempoPausaCurta");
+  const pausaLongaPersistida = localStorage.getItem("tempoPausaLonga");
 
-  // Carrega o último fundo de tela que o usuário escolheu.
+  if (pomodoroPersistido)   tempoPomodoroPadrao   = parseInt(pomodoroPersistido,   10);
+  if (pausaCurtaPersistida) tempoPausaCurtaPadrao = parseInt(pausaCurtaPersistida, 10);
+  if (pausaLongaPersistida) tempoPausaLongaPadrao = parseInt(pausaLongaPersistida, 10);
+
+  if (inputPomodoro)   inputPomodoro.value   = tempoPomodoroPadrao   / 60;
+  if (inputPausaCurta) inputPausaCurta.value = tempoPausaCurtaPadrao / 60;
+  if (inputPausaLonga) inputPausaLonga.value = tempoPausaLongaPadrao / 60;
+
   const fundoSalvo = localStorage.getItem("fundoSalvoCozyCoffee");
-  if (fundoSalvo) {
-    document.body.style.backgroundImage = `url('${fundoSalvo}')`;
-  }
+  if (fundoSalvo) document.body.style.backgroundImage = `url('${fundoSalvo}')`;
 
-  //  Botão de Tela cheia //
 
-  const botaoTelaCheia = document.querySelector(".botao-fullscreen");
-  const botaoMinScreen = document.querySelector(".botao-minscreen");
-
-  // Lógica para entrar na tela cheia//
-
+  // --- EVENTOS: TELA CHEIA ---
   if (botaoTelaCheia) {
     botaoTelaCheia.addEventListener("click", () => {
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
-      } else if (document.documentElement.webkitRequestFullscreen) {
-        /* Safari */
-        document.documentElement.webkitRequestFullscreen();
-      } else if (document.documentElement.msRequestFullscreen) {
-        /* IE11 */
-        document.documentElement.msRequestFullscreen();
-      }
+      if      (document.documentElement.requestFullscreen)       document.documentElement.requestFullscreen();
+      else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen();
+      else if (document.documentElement.msRequestFullscreen)     document.documentElement.msRequestFullscreen();
     });
   }
-
-  // Código para sair da tela cheia //
 
   if (botaoMinScreen) {
     botaoMinScreen.addEventListener("click", () => {
-      console.log("Saindo do modo Tela Cheia!");
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
+      if      (document.exitFullscreen)       document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      else if (document.msExitFullscreen)     document.msExitFullscreen();
     });
   }
-  /// Cérebro da troca //
 
   function handleFullscreenChange() {
-    if (document.fullscreenElement) {
-      botaoTelaCheia.classList.add("escondido");
-      botaoMinScreen.classList.remove("escondido");
-    } else {
-      botaoTelaCheia.classList.remove("escondido");
-      botaoMinScreen.classList.add("escondido");
-    }
+    const emFullscreen = !!document.fullscreenElement;
+    botaoTelaCheia?.classList.toggle("escondido",  emFullscreen);
+    botaoMinScreen?.classList.toggle("escondido",  !emFullscreen);
   }
 
-  // Diz ao Navegador para chamar a função quando o estado mudar //
+  document.addEventListener("fullscreenchange",       handleFullscreenChange);
+  document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+  document.addEventListener("msfullscreenchange",     handleFullscreenChange);
 
-  document.addEventListener("fullscreenchange", handleFullscreenChange);
-  document.addEventListener("webkitfullscreenchange", handleFullscreenChange); // Para Safari
-  document.addEventListener("msfullscreenchange", handleFullscreenChange); // Para IE
 
-  // --- CONECTANDO OS FIOS: EVENT LISTENERS ---
-  // 'addEventListener' é o "ouvinte de eventos". Ele fica esperando uma ação do usuário
-  // (como um 'click') para disparar uma de nossas funções (a "receita").
-  startBtn.addEventListener("click", IniciarTimer);
-  pauseBtn.addEventListener("click", pausarTimer);
+  // --- EVENTOS: CONTROLES DO TIMER ---
+  // AQUI FOI ONDE CONSERTAMOS O BUG DO CLIQUE
+  startBtn?.addEventListener("click", alternarTimer);
+  resetBtn?.addEventListener("click", resetarTimer);
 
-  // Aqui estava o seu bug! O correto é apenas passar o nome da função ('resetarTimer')
-  // como o segundo argumento do "ouvinte".
-  resetBtn.addEventListener("click", resetarTimer);
-
-  // Como temos vários botões de modo, passamos por cada um ('forEach')
-  // e adicionamos um "ouvinte" de clique individualmente.
   botoesModo.forEach((botao) => {
     botao.addEventListener("click", () => trocarModo(botao));
   });
 
-  // Lógica para abrir/fechar o menu de fundos adicionando/removendo uma classe CSS.
-  if (botaoMudarFundo) {
-    botaoMudarFundo.addEventListener("click", () => {
-      menuFundos.classList.remove("escondido");
-    });
-  }
-  if (botaoFecharMenu) {
-    botaoFecharMenu.addEventListener("click", () => {
-      menuFundos.classList.add("escondido");
-    });
-  }
 
-  // Mesma lógica de abrir/fechar para o menu de configurações.
-  if (botaoConfig) {
-    botaoConfig.addEventListener("click", () => {
-      menuConfig.classList.remove("escondido");
-    });
-  }
-  if (botaoFecharConfig) {
-    botaoFecharConfig.addEventListener("click", () => {
-      menuConfig.classList.add("escondido");
-    });
-  }
+  // --- EVENTOS: MENUS (Configurações e Fundos) ---
+  botaoMudarFundo?.addEventListener("click", () => menuFundos?.classList.remove("escondido"));
+  btnFecharGaleria?.addEventListener("click", () => menuFundos?.classList.add("escondido"));
 
-  // Lógica para salvar as novas configurações de tempo quando o usuário clica em "Salvar".
-  if (botaoSalvarConfig) {
-    botaoSalvarConfig.addEventListener("click", () => {
-      // Pega os valores dos inputs (que estão em minutos) e já converte para segundos.
-      const novoPomodoro = inputPomodoro.value * 60;
-      const novaPausaCurta = inputPausaCurta.value * 60;
-      const novaPausaLonga = inputPausaLonga.value * 60;
+  botaoConfig?.addEventListener("click", () => menuConfig?.classList.remove("escondido"));
+  botaoFecharConfig?.addEventListener("click", () => menuConfig?.classList.add("escondido"));
 
-      // Uma pequena validação para garantir que os tempos não sejam zero ou negativos.
-      if (novoPomodoro > 0 && novaPausaCurta > 0 && novaPausaLonga > 0) {
-        tempoPomodoroPadrao = novoPomodoro;
-        tempoPausaCurtaPadrao = novaPausaCurta;
-        tempoPausaLongaPadrao = novaPausaLonga;
+  botaoSalvarConfig?.addEventListener("click", () => {
+    const novoPomodoro   = parseInt(inputPomodoro.value,   10) * 60;
+    const novaPausaCurta = parseInt(inputPausaCurta.value, 10) * 60;
+    const novaPausaLonga = parseInt(inputPausaLonga.value, 10) * 60;
 
-        // Salva os novos valores no localStorage para que sejam lembrados na próxima visita.
-        localStorage.setItem("tempoPomodoro", tempoPomodoroPadrao);
-        localStorage.setItem("tempoPausaCurta", tempoPausaCurtaPadrao);
-        localStorage.setItem("tempoPausaLonga", tempoPausaLongaPadrao);
+    if (!novoPomodoro || !novaPausaCurta || !novaPausaLonga ||
+        novoPomodoro <= 0 || novaPausaCurta <= 0 || novaPausaLonga <= 0) {
+      alert("Por favor, insira valores maiores que zero em todos os campos.");
+      return; 
+    }
+
+    tempoPomodoroPadrao   = novoPomodoro;
+    tempoPausaCurtaPadrao = novaPausaCurta;
+    tempoPausaLongaPadrao = novaPausaLonga;
+
+    localStorage.setItem("tempoPomodoro",   tempoPomodoroPadrao);
+    localStorage.setItem("tempoPausaCurta", tempoPausaCurtaPadrao);
+    localStorage.setItem("tempoPausaLonga", tempoPausaLongaPadrao);
+
+    menuConfig?.classList.add("escondido");
+    resetarTimer(); 
+  });
+
+
+  // --- EVENTOS: PICTURE IN PICTURE ---
+  if (pipBtn) {
+    pipBtn.addEventListener("click", async () => {
+      if (!("documentPictureInPicture" in window)) {
+        alert("Seu navegador não suporta Picture-in-Picture de documentos ainda.");
+        return;
       }
-      menuConfig.classList.add("escondido"); // Esconde o menu de configurações.
-      resetarTimer(); // Reseta o timer para que ele já use os novos tempos.
-    });
-  }
 
-  // LÓGICA PARA PICTURE IN  PICTURE ====================================================================
-
-if (pipBtn) {
-  pipBtn.addEventListener("click", async () => {
-    if ("documentPictureInPicture" in window) {
       try {
         const pipWindow = await window.documentPictureInPicture.requestWindow({
-          width: 320,
-          height: 350,
+          width: 320, height: 350,
         });
 
-        // 1. Copiar Estilos (Melhorado com promessa de carregamento)
-        const styleLink = document.createElement("link");
-        styleLink.rel = "stylesheet";
-        styleLink.href = "seu-estilo.css"; // Certifique-se de que o caminho está correto
-        pipWindow.document.head.append(styleLink);
+        const linkFonte = pipWindow.document.createElement("link");
+        linkFonte.rel = "stylesheet";
+        linkFonte.href = "https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap";
+        pipWindow.document.head.appendChild(linkFonte);
 
-        // Copiar estilos inline também
-        [...document.styleSheets].forEach((styleSheet) => {
+        [...document.styleSheets].forEach((sheet) => {
           try {
-            const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join("");
+            const css = [...sheet.cssRules].map((r) => r.cssText).join("");
             const style = document.createElement("style");
-            style.textContent = cssRules;
+            style.textContent = css;
             pipWindow.document.head.appendChild(style);
-          } catch (e) { /* Ignora cross-origin sheets */ }
+          } catch (_) { }
         });
 
-        // 2. Elementos
-        const display = document.getElementById("timer-display");
+        const display   = document.getElementById("timer-display");
         const controles = document.querySelector(".botoes-controle");
-        const placeholder = document.createElement("div"); // Marcador de lugar
 
-        // Criamos um marcador para saber onde devolver os itens depois
+        const placeholder = document.createElement("div");
         display.parentNode.insertBefore(placeholder, display);
 
+        const fundoAtual = document.body.style.backgroundImage;
+        
         const pipContainer = document.createElement("div");
         pipContainer.classList.add("timer-pip-mode");
         
-        // CSS específico para a janela PiP ficar bonita
-        pipContainer.style.height = "100vh";
-        pipContainer.style.display = "flex";
-        pipContainer.style.flexDirection = "column";
-        pipContainer.style.justifyContent = "center";
-        pipContainer.style.alignItems = "center";
-        pipContainer.style.background = "#1a0f0a"; // Sua cor marrom
+        Object.assign(pipContainer.style, {
+          backgroundImage: fundoAtual,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh",
+          position: "relative" 
+        });
+        
+        const overlayPip = document.createElement("div");
+        overlayPip.classList.add("pip-overlay");
 
-        pipContainer.append(display, controles);
+        // Montamos com o fundo certo de primeira!
+        pipContainer.append(overlayPip, display, controles);
         pipWindow.document.body.append(pipContainer);
+        
+        // Atualiza o GPS!
+        displayAtivo = display;
+        botaoStartAtivo = startBtn;
 
-        // 3. Devolução Segura
         pipWindow.addEventListener("pagehide", () => {
-          // Devolve os elementos exatamente para onde eles estavam
-          placeholder.parentNode.insertBefore(display, placeholder);
+          placeholder.parentNode.insertBefore(display,   placeholder);
           placeholder.parentNode.insertBefore(controles, placeholder);
-          placeholder.remove(); // Remove o marcador
+          placeholder.remove();
+
+          // Restaura o GPS para a tela inicial
+          displayAtivo = display;
+          botaoStartAtivo = startBtn;
+          atualizarDisplay();
         });
 
-      } catch (error) {
-        console.error("Erro ao abrir PiP:", error);
+      } catch (erro) {
+        console.error("Erro ao abrir PiP:", erro);
       }
-    } else {
-      alert("Seu navegador não suporta PiP de documentos ainda!");
-    }
-  });
-}
-
-  // --- CONSTRUINDO A GALERIA MÁGICA: LÓGICA DO MENU DE FUNDOS ---
-  // Este trecho cria as fotinhas de miniatura dinamicamente a partir da nossa lista 'fundosDeTela'.
-  if (galeriaFundos) {
-    fundosDeTela.forEach((caminhoDaImagem, indice) => {
-      const miniatura = document.createElement("div"); // Cria uma <div> "do nada".
-      miniatura.classList.add("miniatura-fundo"); // Adiciona uma classe para o CSS estilizá-la.
-      miniatura.style.backgroundImage = `url('${caminhoDaImagem}')`; // Define a imagem da miniatura.
-
-      // Adiciona um "ouvinte" de clique em cada uma das miniaturas que criamos.
-      miniatura.addEventListener("click", () => {
-        const fundoEscolhido = fundosDeTela[indice]; // Pega o caminho da imagem clicada.
-        document.body.style.backgroundImage = `url('${fundoEscolhido}')`; // Aplica no fundo da página.
-        localStorage.setItem("fundoSalvoCozyCoffee", fundoEscolhido); // Salva a escolha no localStorage.
-        menuFundos.classList.add("escondido"); // Fecha o menu.
-      });
-      // Finalmente, "pendura" a miniatura que criamos dentro da galeria no HTML.
-      galeriaFundos.appendChild(miniatura);
     });
   }
 
-  // Chamamos a função resetarTimer() uma vez no início de tudo.
-  // Isso garante que o placar na tela comece com o valor correto do modo padrão (pomodoro).
+  // --- RENDERIZAÇÃO INICIAL ---
+  renderizarGaleria();
   resetarTimer();
+
 });
