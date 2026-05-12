@@ -303,7 +303,7 @@ function renderizarGaleria() {
 
     const titulo = document.createElement("h4");
     if (categoria === "cafeteria") titulo.innerText = "CAFÉ";
-    else if (categoria === "dark-academy") titulo.innerText = "DARK ACADEMIA";
+    else if (categoria === "dark-academy") titulo.innerText = "DARK ACADEMY";
     else if (categoria === "fantasia") titulo.innerText = "FANTASIA";
     else if (categoria === "landscape") titulo.innerText = "LANDSCAPE";
     else if (categoria === "livros") titulo.innerText = "LIVROS";
