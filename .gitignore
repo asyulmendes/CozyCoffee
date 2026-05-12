@@ -1,6 +1,3 @@
-# Pastas de arquivos originais pesados
-assets/backgrounds/originais/
-assets/backgrounds/videos-originais/
-
-# Lixo gerado pelo Python
-__pycache__/
+# Ignorar qualquer pasta chamada 'originais' ou 'videos-originais' em qualquer lugar
+**/originais/
+**/videos-originais/
