@@ -23,6 +23,7 @@ let modoAtual    = "pomodoro";          // "pomodoro" | "pausa-curta" | "pausa-l
 let ciclosPomodoro = 0;                 // pomodoros completos no ciclo atual
 let displayAtivo = null; // Guardará a referência do relógio (na aba ou no PiP)
 let botaoStartAtivo = null; // Guardará a referência do botão (na aba ou no PiP)
+let modoPip = false; // Indica se esta no modo Picture-in-Picture
 
 // ====================================================================================
 // 2. BANCO DE DADOS DE FUNDOS
@@ -181,7 +182,7 @@ function alternarTimer() {
     // Ação de Pausar
     clearInterval(intervalo);
     intervalo = null;
-    if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+    if (modoPip && botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
   } else {
     // Ação de Iniciar
     intervalo = setInterval(() => {
@@ -191,7 +192,7 @@ function alternarTimer() {
       } else {
         clearInterval(intervalo);
         intervalo = null;
-        if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+        if (modoPip && botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
         
         const som = document.getElementById("sound-end-timer");
         if (som) som.play();
@@ -199,7 +200,7 @@ function alternarTimer() {
         iniciarProximoModo();
       }
     }, 1000);
-    if (botaoStartAtivo) botaoStartAtivo.innerText = "PAUSAR";
+    if (modoPip && botaoStartAtivo) botaoStartAtivo.innerText = "PAUSAR";
   }
 }
 
@@ -239,7 +240,7 @@ function trocarModo(botao) {
 
   clearInterval(intervalo);
   intervalo = null;
-  if (botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
+  if (modoPip && botaoStartAtivo) botaoStartAtivo.innerText = "INICIAR";
 
   atualizarDisplay(); 
 }
@@ -342,6 +343,7 @@ window.addEventListener("DOMContentLoaded", () => {
   // --- SELETORES DE ELEMENTOS ---
   const timerDisplay     = document.getElementById("timer-display");
   const startBtn         = document.getElementById("start");
+  const pauseBtn         = document.getElementById("pause");
   const resetBtn         = document.getElementById("reset");
   const botoesModo       = document.querySelectorAll(".modo-botao");
   const botaoMudarFundo  = document.getElementById("background");
@@ -358,7 +360,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const botaoTelaCheia   = document.querySelector(".botao-fullscreen");
   const botaoMinScreen   = document.querySelector(".botao-minscreen");
 
-  // Ligando o GPS Inicial!
+  
   displayAtivo = timerDisplay;
   botaoStartAtivo = startBtn;
 
@@ -409,8 +411,20 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
   // --- EVENTOS: CONTROLES DO TIMER ---
-  // AQUI FOI ONDE CONSERTAMOS O BUG DO CLIQUE
-  startBtn?.addEventListener("click", alternarTimer);
+  
+  startBtn?.addEventListener("click", () => {
+  if (modoPip) {
+    alternarTimer(); 
+  } else {
+    if (!intervalo) alternarTimer(); 
+  }
+});
+
+pauseBtn?.addEventListener("click", () => {
+  if (!modoPip) {
+    if (intervalo) alternarTimer(); 
+  }
+});
   resetBtn?.addEventListener("click", resetarTimer);
 
   botoesModo.forEach((botao) => {
@@ -497,7 +511,7 @@ window.addEventListener("DOMContentLoaded", () => {
         
         const overlayPip = document.createElement("div");
         overlayPip.classList.add("pip-overlay");
-
+        modoPip = true;
         // Montamos com o fundo certo de primeira!
         pipContainer.append(overlayPip, display, controles);
         pipWindow.document.body.append(pipContainer);
@@ -510,6 +524,7 @@ window.addEventListener("DOMContentLoaded", () => {
           placeholder.parentNode.insertBefore(display,   placeholder);
           placeholder.parentNode.insertBefore(controles, placeholder);
           placeholder.remove();
+          modoPip = false;
 
           // Restaura o GPS para a tela inicial
           displayAtivo = display;
