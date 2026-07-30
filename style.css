@@ -92,7 +92,7 @@ main {
 
 .modo-botao:not(.ativo) {
   background: rgba(61, 31, 15, 0.3);
-  color: rgba(247, 235, 223, 0.5);
+  color: rgba(229, 179, 128, 0.5);
   border: 1px solid rgba(183, 160, 135, 0.1);
 }
 
@@ -352,56 +352,59 @@ button .icon {
   opacity: 0;
   width: auto;
   white-space: nowrap;
+
   
-  
-  background-color: rgba(61, 31, 15, 0.85); 
+  background-color: rgba(35, 18, 9, 0.85); 
   color: var(--cor-fundo-claro);
-  backdrop-filter: blur(6px);
   border: 1px solid rgba(183, 160, 135, 0.3);
   
   text-align: center;
   border-radius: 8px; 
   padding: 6px 12px;
-  
+
   
   font-family: var(--fonte-padrao);
-  font-weight: 500;
+  font-weight: 600; 
   font-size: 0.85rem;
   letter-spacing: 0.5px;
-  text-transform: lowercase; 
-
   
+  
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   position: absolute;
   z-index: 2000;
-  
-  
+
   bottom: -100%; 
   left: 50%;
-  transform: translateX(-50%) translateY(-5px);
-  transition: opacity 0.3s ease ease 0.8s, transform 0.3s ease 0.8s, visibility 0s linear 0.8s;
   
+  
+  transform: translate3d(-50%, -5px, 0);
+  will-change: opacity, transform;
+
+ 
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   pointer-events: none; 
 }
-
 
 button:hover .tooltipstext {
   visibility: visible;
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  transform: translate3d(-50%, 0, 0);
 }
+
 
 .botoes-laterais .tooltipstext {
   bottom: auto;
   right: 130%; 
   left: auto;
   top: 50%;
-  transform: translateY(-50%) translateX(10px);
+  transform: translate3d(10px, -50%, 0);
 }
 
 .botoes-laterais button:hover .tooltipstext {
-  transform: translateY(-50%) translateX(0);
+  transform: translate3d(0, -50%, 0);
 }
-
 /* =================================================================== */
 /* MENU DE SELEÇÃO DE FUNDOS (GALERIA)                                 */
 /* =================================================================== */
@@ -675,7 +678,7 @@ button:hover .tooltipstext {
 }
 
 .input-grupo label {
-  font-family: var(--fonte-destaque);
+  font-family: var(--fonte-padrao);
   font-size: 0.65rem; 
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -693,7 +696,7 @@ button:hover .tooltipstext {
   border-radius: 12px;
   padding: 10px;
   color: var(--cor-fundo-claro);
-  font-family: var(--fonte-destaque); 
+  font-family: var(--fonte-padrao); 
   font-size: 1.1rem;
   text-align: center;
   transition: all 0.3s ease;
@@ -746,9 +749,10 @@ button:hover .tooltipstext {
 /* =================================================================== */
 
 .config-descricao {
-  font-family: var(--fonte-destaque);
+  font-family: var(--fonte-padrao);
   font-weight: 600;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
+  text-transform: uppercase;
   color: #f7ebdf;
   margin-bottom: 50px; 
 }
@@ -769,10 +773,10 @@ button:hover .tooltipstext {
 }
 
 .input-grupo label {
-  font-family: var(--fonte-destaque);
-  font-size: 0.9rem; 
+  font-family: var(--fonte-padrao);
+  font-size: 0.7rem; 
   text-transform: uppercase;
-  letter-spacing: 2px; 
+  letter-spacing: 1px; 
   color: var(--cor-detalhe-suave);
   margin-bottom: 15px;
   white-space: nowrap;
